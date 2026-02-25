@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="icono-pay.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icono-pay-180.png">
     
-    <title>Pays Control</title>
+    <title>Pays Control · Pastel</title>
     <style>
         * {
             margin: 0;
@@ -24,14 +24,14 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #F2F2F7; /* Fondo gris claro estilo iOS */
+            background: #FFF9F7; /* Fondo rosado pastel suave */
             min-height: 100vh;
-            color: #000;
+            color: #6B5B7E; /* Texto lila grisáceo */
         }
         
-        /* Barra de estado simulada para que se vea como app nativa */
+        /* Barra de estado simulada */
         .status-bar {
-            background: #F2F2F7;
+            background: #FFF9F7;
             height: 44px;
             width: 100%;
         }
@@ -39,41 +39,41 @@
         .container {
             max-width: 500px;
             margin: 0 auto;
-            padding: 0 16px 16px 16px;
+            padding: 0 20px 24px 20px;
         }
         
-        /* Header estilo app nativa */
+        /* Header con más espacio */
         .app-header {
-            padding: 20px 0 10px 0;
-            margin-bottom: 10px;
+            padding: 24px 0 16px 0;
+            margin-bottom: 16px;
         }
         
         .app-header h1 {
             font-size: 34px;
             font-weight: 700;
-            color: #000;
-            margin-bottom: 4px;
+            color: #A58E9E; /* Rosa grisáceo pastel */
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
         }
         
         .app-header .subtitle {
-            font-size: 15px;
-            color: #8E8E93;
+            font-size: 16px;
+            color: #C4B1BC; /* Rosa más claro */
             font-weight: 400;
         }
         
-        /* Tarjetas estilo iOS */
+        /* Tarjetas con fondo pastel */
         .form-card {
             background: #FFFFFF;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-radius: 24px;
+            padding: 28px 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 20px rgba(165, 142, 158, 0.1);
+            border: 1px solid #FFE9E4;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px; /* Más espacio entre campos */
         }
         
         .form-group:last-child {
@@ -84,57 +84,63 @@
             display: block;
             font-size: 14px;
             font-weight: 500;
-            color: #6C6C70;
-            margin-bottom: 6px;
+            color: #C4B1BC; /* Rosa pastel para labels */
+            margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
         
-        /* Inputs estilo iOS */
+        /* Inputs con bordes pastel */
         input, select {
             width: 100%;
-            padding: 14px 16px;
-            background: #F2F2F7;
-            border: 1px solid #E5E5EA;
-            border-radius: 12px;
+            padding: 16px 18px; /* Más padding interno */
+            background: #FFF9F7;
+            border: 1.5px solid #FFE0D9;
+            border-radius: 16px;
             font-size: 17px;
             transition: all 0.2s ease;
             -webkit-appearance: none;
             appearance: none;
+            color: #6B5B7E;
         }
         
         input:focus, select:focus {
             outline: none;
-            border-color: #007AFF;
+            border-color: #F9B8B0; /* Rosa salmón pastel */
             background: #FFFFFF;
         }
         
+        input::placeholder {
+            color: #DEC9D2;
+        }
+        
         .department-select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23C4B1BC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 16px center;
+            background-position: right 18px center;
             background-size: 18px;
         }
         
-        /* Sección de sabores */
+        /* Sección de sabores con más espacio */
         .flavors-section {
-            background: #F8F8FC;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 16px 0;
+            background: #FFF9F7;
+            border-radius: 18px;
+            padding: 20px;
+            margin: 24px 0; /* Más espacio vertical */
+            border: 1.5px solid #FFE9E4;
         }
         
         .flavors-section label {
-            color: #8E8E93;
+            color: #C4B1BC;
             font-size: 13px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
         
         .flavor-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 16px; /* Más espacio entre filas */
         }
         
         .flavor-type {
@@ -147,18 +153,19 @@
         
         .flavor-type select, .flavor-quantity input {
             background: #FFFFFF;
-            padding: 12px;
+            padding: 14px;
             font-size: 16px;
+            border-color: #FFE0D9;
         }
         
         .remove-flavor {
-            background: #FF3B30;
-            color: white;
+            background: #FFC9C9; /* Rosa pastel */
+            color: #A58E9E;
             border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            font-size: 18px;
+            width: 42px; /* Más grande */
+            height: 42px;
+            border-radius: 12px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -167,126 +174,130 @@
         }
         
         .remove-flavor:active {
-            background: #D70015;
+            background: #FFB5B5;
         }
         
         .add-flavor-btn {
             background: transparent;
-            color: #007AFF;
-            border: 1px dashed #007AFF;
-            padding: 14px;
-            border-radius: 12px;
+            color: #F9B8B0;
+            border: 1.5px dashed #F9B8B0;
+            padding: 16px;
+            border-radius: 16px;
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             width: 100%;
-            margin-top: 8px;
+            margin-top: 16px; /* Más espacio arriba */
         }
         
         .add-flavor-btn:active {
-            background: rgba(0, 122, 255, 0.05);
+            background: #FFF0EC;
         }
         
-        /* Total display */
+        /* Total display - más espacio y colores pastel */
         .total-display {
-            background: #007AFF;
-            color: white;
-            padding: 16px;
-            border-radius: 12px;
+            background: #F9E5E1; /* Rosa pastel claro */
+            color: #A58E9E;
+            padding: 20px;
+            border-radius: 18px;
             text-align: center;
             font-weight: 600;
-            font-size: 18px;
-            margin: 20px 0 0 0;
-            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
+            font-size: 20px;
+            margin: 28px 0 24px 0; /* Mucho más espacio arriba y abajo */
+            box-shadow: 0 4px 12px rgba(249, 184, 176, 0.2);
+            border: 1px solid #FFE0D9;
         }
         
-        /* Botón principal */
+        /* Botón principal - pastel */
         .add-btn {
             width: 100%;
-            padding: 18px;
-            background: #007AFF;
+            padding: 20px; /* Más alto */
+            background: #F9B8B0; /* Rosa salmón pastel */
             border: none;
-            border-radius: 14px;
+            border-radius: 20px;
             color: white;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+            box-shadow: 0 6px 16px rgba(249, 184, 176, 0.3);
+            letter-spacing: 0.5px;
+            margin-top: 8px;
         }
         
         .add-btn:active {
-            background: #005BBF;
+            background: #F5A59B;
             transform: scale(0.98);
         }
         
         /* Lista de pedidos */
         .list-section {
-            margin-top: 20px;
+            margin-top: 32px; /* Más espacio */
         }
         
         .list-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 12px 0 16px 0;
         }
         
         .list-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
-            color: #000;
+            color: #A58E9E;
         }
         
         .action-buttons {
             display: flex;
-            gap: 8px;
+            gap: 12px; /* Más espacio entre botones */
         }
         
         .action-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 30px;
             font-size: 14px;
             font-weight: 500;
             border: none;
             cursor: pointer;
             transition: all 0.2s ease;
+            letter-spacing: 0.3px;
         }
         
         .export-btn {
-            background: #34C759;
-            color: white;
+            background: #C4E8D9; /* Verde menta pastel */
+            color: #6B8F84;
         }
         
         .export-btn:active {
-            background: #2B9A48;
+            background: #B0DECC;
         }
         
         .clear-btn {
-            background: #FF3B30;
-            color: white;
+            background: #FFC9C9; /* Rosa pastel */
+            color: #A58E9E;
         }
         
         .clear-btn:active {
-            background: #D70015;
+            background: #FFB5B5;
         }
         
         .orders-list {
             list-style: none;
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            margin-top: 10px;
+            margin-top: 16px;
         }
         
         .order-item {
             background: #FFFFFF;
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            border: 1px solid #E5E5EA;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px; /* Más espacio entre items */
+            box-shadow: 0 4px 12px rgba(165, 142, 158, 0.08);
+            border: 1px solid #FFE9E4;
             position: relative;
             animation: slideIn 0.2s ease;
         }
@@ -306,110 +317,123 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            padding-right: 30px;
+            margin-bottom: 16px;
+            padding-right: 40px;
         }
         
         .order-name {
             font-weight: 600;
-            font-size: 17px;
-            color: #000;
+            font-size: 18px;
+            color: #6B5B7E;
         }
         
         .order-department {
-            background: #F2F2F7;
-            color: #8E8E93;
-            padding: 4px 10px;
-            border-radius: 20px;
+            background: #FFF0EC;
+            color: #A58E9E;
+            padding: 6px 14px;
+            border-radius: 30px;
             font-size: 13px;
             font-weight: 500;
         }
         
         .flavors-list {
-            margin: 10px 0;
+            margin: 14px 0;
         }
         
         .flavor-tag {
             display: inline-flex;
             align-items: center;
-            background: #F2F2F7;
-            border-radius: 20px;
-            padding: 6px 14px;
-            margin: 0 6px 6px 0;
+            border-radius: 30px;
+            padding: 8px 16px;
+            margin: 0 8px 8px 0;
             font-size: 14px;
-            color: #000;
         }
         
         .flavor-tag.queso {
-            background: #FFE5B4;
-            color: #8B4513;
+            background: #FFF2D7; /* Amarillo pastel */
+            color: #B59E7C;
         }
         
         .flavor-tag.zarzamora {
-            background: #FFD7D7;
-            color: #8B1E1E;
+            background: #FFE2E2; /* Rosa pastel */
+            color: #B28B8B;
         }
         
         .order-total {
             font-weight: 600;
-            color: #007AFF;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #E5E5EA;
+            color: #F9B8B0;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1.5px solid #FFE9E4;
+            font-size: 16px;
         }
         
         .delete-item {
             background: none;
             border: none;
-            color: #FF3B30;
-            font-size: 22px;
+            color: #FFC9C9;
+            font-size: 24px;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 12px;
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 16px;
+            right: 16px;
+            transition: all 0.2s ease;
         }
         
         .delete-item:active {
-            background: rgba(255, 59, 48, 0.1);
+            background: #FFF0EC;
+            color: #FFB5B5;
         }
         
         .empty-list {
             text-align: center;
-            color: #8E8E93;
-            padding: 40px 20px;
+            color: #DEC9D2;
+            padding: 48px 24px;
             background: #FFFFFF;
-            border-radius: 14px;
-            border: 1px dashed #C6C6C8;
+            border-radius: 20px;
+            border: 1.5px dashed #FFE0D9;
             font-size: 16px;
         }
         
         .stats {
             display: flex;
             justify-content: space-between;
-            margin-top: 16px;
-            padding: 16px;
+            margin-top: 24px; /* Más espacio */
+            padding: 20px 24px;
             background: #FFFFFF;
-            border-radius: 12px;
-            border: 1px solid #E5E5EA;
-            color: #000;
+            border-radius: 18px;
+            border: 1px solid #FFE9E4;
+            color: #6B5B7E;
             font-weight: 500;
+            font-size: 16px;
         }
         
         .stats span {
-            color: #8E8E93;
+            color: #C4B1BC;
         }
         
         .stats span span {
-            color: #000;
+            color: #A58E9E;
             font-weight: 600;
-            margin-left: 4px;
+            margin-left: 6px;
+            font-size: 18px;
         }
         
+        /* Responsive */
         @media (max-width: 400px) {
+            .container {
+                padding: 0 16px 20px 16px;
+            }
+            
+            .form-card {
+                padding: 20px 16px;
+            }
+            
             .action-buttons {
                 flex-direction: column;
+                gap: 8px;
             }
             
             .flavor-row {
@@ -422,7 +446,13 @@
             
             .remove-flavor {
                 width: 100%;
-                border-radius: 10px;
+                border-radius: 12px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
             }
         }
     </style>
@@ -433,14 +463,14 @@
     <div class="container">
         <div class="app-header">
             <h1>Pays Control</h1>
-            <div class="subtitle">Registra pedidos por persona</div>
+            <div class="subtitle">Registra pedidos · Estilo pastel</div>
         </div>
         
         <form id="orderForm">
             <div class="form-card">
                 <div class="form-group">
                     <label>👤 NOMBRE</label>
-                    <input type="text" id="nombre" placeholder="Nombre del solicitante" required autocomplete="off">
+                    <input type="text" id="nombre" placeholder="Ej. Ana García" required autocomplete="off">
                 </div>
                 
                 <div class="form-group">
@@ -461,15 +491,17 @@
                 </div>
                 
                 <div class="flavors-section">
-                    <label>SABORES Y CANTIDADES</label>
+                    <label>🍰 SABORES Y CANTIDADES</label>
                     <div id="flavors-container"></div>
                     <button type="button" id="addFlavorBtn" class="add-flavor-btn">+ Agregar otro sabor</button>
                 </div>
                 
+                <!-- MÁS ESPACIO ENTRE TOTAL Y BOTÓN -->
                 <div id="totalDisplay" class="total-display">
                     Total: 0 pays
                 </div>
                 
+                <!-- BOTÓN CON MÁS ESPACIO ARRIBA -->
                 <button type="submit" class="add-btn">Agregar pedido</button>
             </div>
         </form>
@@ -506,7 +538,7 @@
             
             loadOrders() {
                 try {
-                    const saved = localStorage.getItem('pieOrdersNative');
+                    const saved = localStorage.getItem('pieOrdersPastel');
                     return saved ? JSON.parse(saved) : [];
                 } catch (e) {
                     return [];
@@ -514,7 +546,7 @@
             }
             
             saveOrders() {
-                localStorage.setItem('pieOrdersNative', JSON.stringify(this.orders));
+                localStorage.setItem('pieOrdersPastel', JSON.stringify(this.orders));
                 this.updateStats();
             }
             
