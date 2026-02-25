@@ -1,912 +1,1288 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    
-    <!-- CONFIGURACIÓN PARA IPHONE -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Pays Control">
-    
-    <!-- ICONO -->
-    <link rel="apple-touch-icon" href="icono-pay.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icono-pay-180.png">
-    
-    <title>Pays Control · by Emily Zuno</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #FFE5E5;
-            min-height: 100vh;
-            color: #4A3B4E;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .status-bar {
-            background: #FFE5E5;
-            height: 44px;
-            width: 100%;
-        }
-        
-        .main-content {
-            flex: 1;
-        }
-        
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 0 20px 24px 20px;
-        }
-        
-        .app-header {
-            padding: 24px 0 16px 0;
-            margin-bottom: 16px;
-        }
-        
-        .app-header h1 {
-            font-size: 36px;
-            font-weight: 700;
-            color: #E89393;
-            margin-bottom: 6px;
-            letter-spacing: -0.5px;
-            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
-        }
-        
-        .app-header .subtitle {
-            font-size: 16px;
-            color: #B48686;
-            font-weight: 500;
-        }
-        
-        .form-card {
-            background: #FFFFFF;
-            border-radius: 28px;
-            padding: 28px 24px;
-            margin-bottom: 28px;
-            box-shadow: 0 10px 25px rgba(232, 147, 147, 0.2);
-            border: 2px solid #FFD6D6;
-        }
-        
-        .form-group {
-            margin-bottom: 24px;
-        }
-        
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #E89393;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 16px 18px;
-            background: #FFF8F8;
-            border: 2px solid #FFC9C9;
-            border-radius: 18px;
-            font-size: 17px;
-            transition: all 0.2s ease;
-            -webkit-appearance: none;
-            appearance: none;
-            color: #4A3B4E;
-            font-weight: 500;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #FF9E9E;
-            background: #FFFFFF;
-            box-shadow: 0 0 0 4px rgba(255, 158, 158, 0.2);
-        }
-        
-        input::placeholder {
-            color: #D9B0B0;
-            font-weight: 400;
-        }
-        
-        .department-select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23E89393' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 18px center;
-            background-size: 18px;
-        }
-        
-        .flavors-section {
-            background: #FFF5F5;
-            border-radius: 22px;
-            padding: 22px;
-            margin: 24px 0;
-            border: 2px solid #FFD6D6;
-        }
-        
-        .flavors-section label {
-            color: #E89393;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-        
-        .flavor-row {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .flavor-type {
-            flex: 2;
-        }
-        
-        .flavor-quantity {
-            flex: 1;
-        }
-        
-        .flavor-type select, .flavor-quantity input {
-            background: #FFFFFF;
-            padding: 14px;
-            font-size: 16px;
-            border-color: #FFC9C9;
-        }
-        
-        .remove-flavor {
-            background: #FFB8B8;
-            color: #FFFFFF;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(255, 184, 184, 0.3);
-        }
-        
-        .remove-flavor:active {
-            background: #FF9E9E;
-            transform: scale(0.95);
-        }
-        
-        .add-flavor-btn {
-            background: transparent;
-            color: #FF9E9E;
-            border: 2px dashed #FF9E9E;
-            padding: 16px;
-            border-radius: 18px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
-            margin-top: 16px;
-        }
-        
-        .add-flavor-btn:active {
-            background: #FFF0F0;
-            border-style: solid;
-        }
-        
-        /* TOTAL DISPLAY MEJORADO - CON DESGLOSE */
-        .total-display {
-            background: #FFE0E0;
-            border-radius: 20px;
-            margin: 28px 0 24px 0;
-            box-shadow: 0 6px 15px rgba(255, 158, 158, 0.3);
-            border: 2px solid #FFC1C1;
-            overflow: hidden;
-        }
-        
-        .total-main {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #FFC1C1;
-        }
-        
-        .total-main .total-label {
-            font-size: 14px;
-            color: #B48686;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        
-        .total-main .total-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: #E86A6A;
-            line-height: 1.2;
-        }
-        
-        .total-breakdown {
-            display: flex;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.5);
-        }
-        
-        .breakdown-item {
-            flex: 1;
-            text-align: center;
-            padding: 8px;
-            border-radius: 12px;
-        }
-        
-        .breakdown-item.queso {
-            background: #FFEAB3;
-            margin-right: 6px;
-        }
-        
-        .breakdown-item.zarzamora {
-            background: #FFD1D1;
-            margin-left: 6px;
-        }
-        
-        .breakdown-label {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        
-        .breakdown-label.queso {
-            color: #8B6F3C;
-        }
-        
-        .breakdown-label.zarzamora {
-            color: #A15555;
-        }
-        
-        .breakdown-number {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        
-        .breakdown-number.queso {
-            color: #8B6F3C;
-        }
-        
-        .breakdown-number.zarzamora {
-            color: #A15555;
-        }
-        
-        .add-btn {
-            width: 100%;
-            padding: 20px;
-            background: #FF9E9E;
-            border: none;
-            border-radius: 22px;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 18px rgba(255, 158, 158, 0.4);
-            letter-spacing: 0.5px;
-            margin-top: 8px;
-            text-transform: uppercase;
-        }
-        
-        .add-btn:active {
-            background: #FF8585;
-            transform: scale(0.97);
-            box-shadow: 0 4px 12px rgba(255, 133, 133, 0.4);
-        }
-        
-        .list-section {
-            margin-top: 32px;
-        }
-        
-        .list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0 16px 0;
-        }
-        
-        .list-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #E89393;
-            text-shadow: 1px 1px 0 white;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .action-btn {
-            padding: 12px 22px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: 0.3px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        }
-        
-        .export-btn {
-            background: #A8E6CF;
-            color: #2F5E4A;
-        }
-        
-        .export-btn:active {
-            background: #8FD9BC;
-            transform: scale(0.95);
-        }
-        
-        .clear-btn {
-            background: #FFB8B8;
-            color: #802E2E;
-        }
-        
-        .clear-btn:active {
-            background: #FF9E9E;
-            transform: scale(0.95);
-        }
-        
-        .orders-list {
-            list-style: none;
-            max-height: 450px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            margin-top: 16px;
-        }
-        
-        .order-item {
-            background: #FFFFFF;
-            border-radius: 24px;
-            padding: 22px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 15px rgba(232, 147, 147, 0.15);
-            border: 2px solid #FFD6D6;
-            position: relative;
-            animation: slideIn 0.2s ease;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-right: 40px;
-        }
-        
-        .order-name {
-            font-weight: 700;
-            font-size: 18px;
-            color: #4A3B4E;
-        }
-        
-        .order-department {
-            background: #FFE5E5;
-            color: #B06363;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid #FFC9C9;
-        }
-        
-        .flavors-list {
-            margin: 14px 0;
-        }
-        
-        .flavor-tag {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 30px;
-            padding: 8px 18px;
-            margin: 0 8px 8px 0;
-            font-size: 14px;
-            font-weight: 600;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .flavor-tag.queso {
-            background: #FFEAB3;
-            color: #8B6F3C;
-        }
-        
-        .flavor-tag.zarzamora {
-            background: #FFD1D1;
-            color: #A15555;
-        }
-        
-        .order-total {
-            font-weight: 700;
-            color: #FF8585;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 2px solid #FFE0E0;
-            font-size: 17px;
-        }
-        
-        .delete-item {
-            background: none;
-            border: none;
-            color: #FFB8B8;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 12px;
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            transition: all 0.2s ease;
-        }
-        
-        .delete-item:active {
-            background: #FFE5E5;
-            color: #FF8585;
-        }
-        
-        .empty-list {
-            text-align: center;
-            color: #D9B0B0;
-            padding: 48px 24px;
-            background: #FFFFFF;
-            border-radius: 24px;
-            border: 2px dashed #FFC9C9;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 24px;
-            padding: 20px 24px;
-            background: #FFFFFF;
-            border-radius: 22px;
-            border: 2px solid #FFD6D6;
-            color: #4A3B4E;
-            font-weight: 600;
-            font-size: 16px;
-            box-shadow: 0 4px 10px rgba(232, 147, 147, 0.1);
-        }
-        
-        .stats span {
-            color: #B48686;
-        }
-        
-        .stats span span {
-            color: #E86A6A;
-            font-weight: 700;
-            margin-left: 6px;
-            font-size: 20px;
-        }
-        
-        .app-footer {
-            text-align: center;
-            padding: 24px 0 16px 0;
-            margin-top: 20px;
-            border-top: 1px solid #FFD6D6;
-            background: transparent;
-            width: 100%;
-        }
-        
-        .footer-text {
-            font-size: 14px;
-            color: #B48686;
-            font-weight: 400;
-            letter-spacing: 0.3px;
-        }
-        
-        .footer-text .highlight {
-            color: #E86A6A;
-            font-weight: 600;
-            background: rgba(255, 232, 232, 0.5);
-            padding: 4px 10px;
-            border-radius: 30px;
-            display: inline-block;
-            margin-left: 4px;
-            border: 1px solid #FFC9C9;
-        }
-        
-        @media (max-width: 400px) {
-            .container {
-                padding: 0 16px 20px 16px;
-            }
-            
-            .form-card {
-                padding: 20px 16px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .flavor-row {
-                flex-direction: column;
-            }
-            
-            .flavor-type, .flavor-quantity {
-                width: 100%;
-            }
-            
-            .remove-flavor {
-                width: 100%;
-                border-radius: 12px;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 12px;
-                text-align: center;
-            }
-            
-            .total-breakdown {
-                flex-direction: column;
-            }
-            
-            .breakdown-item.queso {
-                margin-right: 0;
-                margin-bottom: 6px;
-            }
-            
-            .breakdown-item.zarzamora {
-                margin-left: 0;
-            }
-            
-            .footer-text {
-                font-size: 13px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Pays">
+  <title>Pays · Emily Zuno</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #FDF6F9;
+      --surface:  #FFFFFF;
+      --border:   #F0E6EE;
+      --accent:   #C9859E;
+      --accent2:  #A8C5DA;
+      --text-1:   #3D2B38;
+      --text-2:   #8C6B80;
+      --text-3:   #C4A8BB;
+      --queso:    #F2C57C;
+      --zarza:    #B8A9D9;
+      --tab-h:    72px;
+      --safe-b:   env(safe-area-inset-bottom, 0px);
+      --radius:   20px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ── APP SHELL ── */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    /* ── HEADER ── */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(253,246,249,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .top-bar-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-1);
+      letter-spacing: -0.5px;
+    }
+
+    .top-bar-logo span {
+      color: var(--accent);
+    }
+
+    .top-bar-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 30px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── SCROLL AREA ── */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: calc(var(--tab-h) + var(--safe-b) + 16px);
+    }
+
+    /* ── PAGES ── */
+    .page {
+      display: none;
+      animation: pageIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .page.active { display: block; }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-head {
+      padding: 20px 20px 12px;
+    }
+    .section-head h2 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-3);
+    }
+
+    /* ═══════════════════════════
+       PAGE 1: NUEVO PEDIDO
+    ═══════════════════════════ */
+    .form-surface {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin: 0 16px 12px;
+      overflow: hidden;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--border);
+      min-height: 56px;
+      gap: 12px;
+    }
+
+    .field-row:last-child { border-bottom: none; }
+
+    .field-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      width: 24px;
+      text-align: center;
+    }
+
+    .field-row input,
+    .field-row select {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-1);
+      outline: none;
+      -webkit-appearance: none;
+      padding: 16px 0;
+    }
+
+    .field-row select {
+      cursor: pointer;
+    }
+
+    .field-row input::placeholder { color: var(--text-3); }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-3);
+      flex-shrink: 0;
+      width: 90px;
+    }
+
+    /* error state */
+    .field-row.error { background: #FFF5F4; }
+    .field-row.error input,
+    .field-row.error select { color: var(--accent); }
+    .field-error-msg {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      padding: 4px 18px 8px;
+      display: none;
+    }
+    .field-error-msg.show { display: block; }
+
+    /* ── SABORES ── */
+    .flavors-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .flavors-head-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .add-flavor-inline {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .add-flavor-inline:active { opacity: 0.7; }
+
+    .flavor-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      animation: slideDown 0.2s ease;
+    }
+    @keyframes slideDown {
+      from { opacity:0; transform:translateY(-6px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .flavor-pill {
+      flex: 1;
+    }
+    .flavor-pill select {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-1);
+      background: var(--bg);
+      -webkit-appearance: none;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .qty-btn {
+      background: var(--bg);
+      border: none;
+      color: var(--text-1);
+      font-size: 18px;
+      font-weight: 300;
+      width: 36px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.1s;
+      flex-shrink: 0;
+    }
+    .qty-btn:active { background: var(--border); }
+
+    .qty-num {
+      font-size: 15px;
+      font-weight: 600;
+      width: 32px;
+      text-align: center;
+      color: var(--text-1);
+      background: white;
+      border: none;
+      border-left: 1.5px solid var(--border);
+      border-right: 1.5px solid var(--border);
+      height: 40px;
+      line-height: 40px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+    }
+
+    .remove-row {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+    .remove-row:active { color: var(--accent); }
+
+    /* ── RESUMEN TOTAL ── */
+    .total-strip {
+      background: linear-gradient(135deg, #E8B4C8 0%, #C9A8D4 50%, #A8C5DA 100%);
+      color: #fff;
+      margin: 0 16px 12px;
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(201,133,158,0.3);
+    }
+
+    .total-strip-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.5;
+      margin-bottom: 2px;
+    }
+
+    .total-strip-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .total-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
+    .total-pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 30px;
+    }
+
+    .total-pill.queso  { background: rgba(245,166,35,0.2);  color: #F5A623; }
+    .total-pill.zarza  { background: rgba(155,89,182,0.2);  color: #BB8FCE; }
+
+    /* ── CTA ── */
+    .submit-btn {
+      width: calc(100% - 32px);
+      margin: 0 16px 16px;
+      padding: 18px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 24px rgba(201,133,158,0.35);
+    }
+    .submit-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 12px rgba(232,83,58,0.25);
+    }
+
+    /* ═══════════════════════════
+       PAGE 2: PEDIDOS
+    ═══════════════════════════ */
+    .orders-actions {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 12px;
+    }
+
+    .action-chip {
+      flex: 1;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .action-chip:active { background: var(--bg); transform: scale(0.97); }
+    .action-chip.danger { color: var(--accent); border-color: #FFD5CE; }
+    .action-chip.export { color: #27AE60; border-color: #C8EED7; }
+
+    .orders-list {
+      list-style: none;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .order-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: slideDown 0.25s ease;
+    }
+
+    .order-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .order-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .order-dept {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-3);
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+    }
+
+    .order-card-flavors {
+      display: flex;
+      gap: 6px;
+      padding: 10px 16px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .flavor-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 30px;
+    }
+
+    .flavor-badge.queso  { background: rgba(245,166,35,0.12); color: #B8820A; }
+    .flavor-badge.zarzamora { background: rgba(155,89,182,0.1);  color: #8E44AD; }
+
+    .order-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+    }
+
+    .order-total-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .order-total-text strong {
+      color: var(--accent);
+      font-size: 15px;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .delete-btn:active { color: var(--accent); background: #FFF0EE; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 32px;
+      color: var(--text-3);
+    }
+
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-label { font-size: 15px; font-weight: 500; color: var(--text-2); }
+    .empty-sub   { font-size: 13px; margin-top: 4px; }
+
+    /* ═══════════════════════════
+       PAGE 3: RESUMEN
+    ═══════════════════════════ */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 16px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+    }
+
+    .stat-card.full { grid-column: 1 / -1; }
+
+    .stat-icon  { font-size: 24px; margin-bottom: 8px; }
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-3);
+    }
+
+    .flavor-stat-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 0 16px 12px;
+      padding: 18px;
+    }
+
+    .flavor-stat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .flavor-stat-row:last-child { margin-bottom: 0; }
+
+    .flavor-stat-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-1);
+      width: 80px;
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 30px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 30px;
+      transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
+    }
+    .bar-fill.queso { background: var(--queso); }
+    .bar-fill.zarza { background: var(--zarza); }
+
+    .flavor-stat-count {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-1);
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .dept-list {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 0 16px 24px;
+      overflow: hidden;
+    }
+
+    .dept-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dept-row:last-child { border-bottom: none; }
+
+    .dept-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-1);
+    }
+    .dept-count {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-2);
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: 30px;
+    }
+
+    /* ═══════════════════════════
+       TAB BAR
+    ═══════════════════════════ */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--tab-h) + var(--safe-b));
+      padding-bottom: var(--safe-b);
+      background: rgba(253,246,249,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 200;
+    }
+
+    .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all 0.15s;
+    }
+
+    .tab:active { transform: scale(0.92); }
+
+    .tab-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      transition: all 0.2s;
+      font-size: 20px;
+    }
+
+    .tab.active .tab-icon {
+      background: var(--accent);
+      font-size: 16px;
+    }
+
+    .tab-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-3);
+      transition: color 0.2s;
+    }
+    .tab.active .tab-label { color: var(--text-1); }
+
+    /* ═══════════════════════════
+       TOAST + CONFIRM
+    ═══════════════════════════ */
+    .toast-stack {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 88%;
+      max-width: 380px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #6B4C6B;
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(-10px) scale(0.96);
+      transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+      text-align: center;
+    }
+    .toast.success { background: #7A9E7E; }
+    .toast.error   { background: #C9859E; }
+    .toast.warning { background: #B8956A; }
+    .toast.show    { opacity: 1; transform: translateY(0) scale(1); }
+
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 8888;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0 16px 40px;
+    }
+    .overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+
+    .sheet {
+      background: #fff;
+      border-radius: 28px;
+      padding: 28px 24px 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+
+    .sheet h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .sheet p  { font-size: 15px; color: var(--text-2); margin-bottom: 24px; line-height: 1.5; }
+
+    .sheet-actions { display: flex; gap: 10px; }
+
+    .sheet-btn {
+      flex: 1; padding: 16px;
+      border-radius: 16px; border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .sheet-btn:active { transform: scale(0.96); }
+    .sheet-btn.cancel { background: var(--bg); color: var(--text-2); }
+    .sheet-btn.ok     { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(201,133,158,0.35); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── STORAGE WARNING ── */
+    .storage-warn {
+      margin: 0 16px 12px;
+      padding: 12px 16px;
+      background: #FFF0F5;
+      border-radius: 14px;
+      border: 1px solid #F0C8D8;
+      font-size: 13px;
+      color: #8C4A65;
+      font-weight: 500;
+      display: none;
+    }
+    .storage-warn.show { display: block; }
+  </style>
 </head>
 <body>
-    <div class="status-bar"></div>
-    
-    <div class="main-content">
-        <div class="container">
-            <div class="app-header">
-                <h1>Pays Control</h1>
-                <div class="subtitle">Registra pedidos · by Emily Zuno</div>
-            </div>
-            
-            <form id="orderForm">
-                <div class="form-card">
-                    <div class="form-group">
-                        <label>👤 NOMBRE</label>
-                        <input type="text" id="nombre" placeholder="Ej. Ana García" required autocomplete="off">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>🏢 DEPARTAMENTO</label>
-                        <select id="departamento" class="department-select" required>
-                            <option value="" disabled selected>Selecciona departamento</option>
-                            <option value="ALMACEN">Almacén</option>
-                            <option value="IT">IT</option>
-                            <option value="MATERIALES">Materiales</option>
-                            <option value="FA">FA</option>
-                            <option value="PRODUCTO">Producto</option>
-                            <option value="PRUEBAS L10">Pruebas L10</option>
-                            <option value="PRUEBAS L6">Pruebas L6</option>
-                            <option value="PROCESOS">Procesos</option>
-                            <option value="NPI">NPI</option>
-                            <option value="OTRO">Otro</option>
-                        </select>
-                    </div>
-                    
-                    <div class="flavors-section">
-                        <label>🍰 SABORES Y CANTIDADES</label>
-                        <div id="flavors-container"></div>
-                        <button type="button" id="addFlavorBtn" class="add-flavor-btn">+ Agregar otro sabor</button>
-                    </div>
-                    
-                    <!-- TOTAL DISPLAY CON DESGLOSE -->
-                    <div id="totalDisplay" class="total-display">
-                        <div class="total-main">
-                            <div class="total-label">TOTAL GENERAL</div>
-                            <div class="total-number">0 pays</div>
-                        </div>
-                        <div class="total-breakdown">
-                            <div class="breakdown-item queso">
-                                <div class="breakdown-label queso">🧀 QUESO</div>
-                                <div class="breakdown-number queso" id="totalQueso">0</div>
-                            </div>
-                            <div class="breakdown-item zarzamora">
-                                <div class="breakdown-label zarzamora">🍇 ZARZAMORA</div>
-                                <div class="breakdown-number zarzamora" id="totalZarzamora">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="add-btn">➕ Agregar pedido</button>
-                </div>
-            </form>
-            
-            <div class="list-section">
-                <div class="list-header">
-                    <span class="list-title">📋 Pedidos</span>
-                    <div class="action-buttons">
-                        <button id="clearAllBtn" class="action-btn clear-btn">🗑️ Limpiar</button>
-                        <button id="exportBtn" class="action-btn export-btn">📤 Exportar</button>
-                    </div>
-                </div>
-                
-                <ul id="ordersList" class="orders-list">
-                    <li class="empty-list">No hay pedidos registrados</li>
-                </ul>
-                
-                <div class="stats">
-                    <span>Total pays <span id="totalPays">0</span></span>
-                    <span>Pedidos <span id="totalOrders">0</span></span>
-                </div>
-            </div>
-        </div>
+
+<!-- TOAST -->
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- CONFIRM SHEET -->
+<div class="overlay" id="overlay">
+  <div class="sheet">
+    <h3 id="sheetTitle">¿Segura?</h3>
+    <p id="sheetBody">Esta acción no se puede deshacer.</p>
+    <div class="sheet-actions">
+      <button class="sheet-btn cancel" id="sheetCancel">Cancelar</button>
+      <button class="sheet-btn ok" id="sheetOk">Eliminar</button>
     </div>
-    
-    <div class="app-footer">
-        <div class="footer-text">
-            Page designed by <span class="highlight">MB programmer</span>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="top-bar-logo">Pays<span>·</span></div>
+    <div class="top-bar-badge" id="headerBadge">0 pedidos</div>
+  </header>
+
+  <!-- SCROLL AREA -->
+  <div class="scroll-area">
+
+    <!-- ══ PAGE: NUEVO ══ -->
+    <div class="page active" id="page-nuevo">
+      <div class="section-head"><h2>Nuevo pedido</h2></div>
+
+      <div class="storage-warn" id="storageWarn">
+        ⚠️ Modo privado — los pedidos no persistirán al cerrar Safari.
+      </div>
+
+      <div class="form-surface" id="mainForm">
+
+        <div class="field-row" id="rowNombre">
+          <span class="field-icon">👤</span>
+          <span class="field-label">Nombre</span>
+          <input type="text" id="inputNombre" placeholder="Ana García" autocomplete="off" autocorrect="off">
         </div>
+        <div class="field-error-msg" id="errNombre">Escribe un nombre válido</div>
+
+        <div class="field-row" id="rowDepto">
+          <span class="field-icon">🏢</span>
+          <span class="field-label">Depto.</span>
+          <select id="inputDepto">
+            <option value="" disabled selected>Seleccionar</option>
+            <option value="ALMACEN">Almacén</option>
+            <option value="IT">IT</option>
+            <option value="MATERIALES">Materiales</option>
+            <option value="FA">FA</option>
+            <option value="PRODUCTO">Producto</option>
+            <option value="PRUEBAS L10">Pruebas L10</option>
+            <option value="PRUEBAS L6">Pruebas L6</option>
+            <option value="PROCESOS">Procesos</option>
+            <option value="NPI">NPI</option>
+            <option value="OTRO">Otro</option>
+          </select>
+        </div>
+        <div class="field-error-msg" id="errDepto">Selecciona un departamento</div>
+
+        <!-- Sabores -->
+        <div class="flavors-head">
+          <span class="flavors-head-label">🍰 Sabores</span>
+          <button class="add-flavor-inline" id="btnAddFlavor">+ Agregar</button>
+        </div>
+        <div id="flavorRows"></div>
+
+      </div>
+
+      <!-- Total strip -->
+      <div class="total-strip">
+        <div>
+          <div class="total-strip-label">Total</div>
+          <div class="total-strip-num" id="stripTotal">0</div>
+          <div style="font-size:12px;opacity:.4;margin-top:2px">pays</div>
+        </div>
+        <div class="total-pills">
+          <div class="total-pill queso">🧀 <span id="stripQueso">0</span></div>
+          <div class="total-pill zarza">🍇 <span id="stripZarza">0</span></div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="btnSubmit">Agregar pedido →</button>
     </div>
-    
-    <script>
-        class OrderManager {
-            constructor() {
-                this.orders = this.loadOrders();
-                this.flavorCount = 1;
-                this.initEventListeners();
-                this.renderOrders();
-                this.addFlavorRow();
-            }
-            
-            loadOrders() {
-                try {
-                    const saved = localStorage.getItem('pieOrdersVibrant');
-                    return saved ? JSON.parse(saved) : [];
-                } catch (e) {
-                    return [];
-                }
-            }
-            
-            saveOrders() {
-                localStorage.setItem('pieOrdersVibrant', JSON.stringify(this.orders));
-                this.updateStats();
-                this.updateTotalDisplay();
-            }
-            
-            addFlavorRow() {
-                const container = document.getElementById('flavors-container');
-                const rowId = `flavor-${Date.now()}-${this.flavorCount}`;
-                
-                const row = document.createElement('div');
-                row.className = 'flavor-row';
-                row.id = rowId;
-                row.innerHTML = `
-                    <div class="flavor-type">
-                        <select class="flavor-select" required>
-                            <option value="queso" selected>🧀 Queso</option>
-                            <option value="zarzamora">🍇 Zarzamora</option>
-                        </select>
-                    </div>
-                    <div class="flavor-quantity">
-                        <input type="number" class="flavor-quantity-input" min="1" value="1" required>
-                    </div>
-                    <button type="button" class="remove-flavor" onclick="orderManager.removeFlavorRow('${rowId}')">✕</button>
-                `;
-                
-                container.appendChild(row);
-                this.flavorCount++;
-                this.updateTotalDisplay();
-                
-                const select = row.querySelector('.flavor-select');
-                const input = row.querySelector('.flavor-quantity-input');
-                select.addEventListener('change', () => this.updateTotalDisplay());
-                input.addEventListener('input', () => this.updateTotalDisplay());
-            }
-            
-            removeFlavorRow(rowId) {
-                const row = document.getElementById(rowId);
-                if (row && document.querySelectorAll('.flavor-row').length > 1) {
-                    row.remove();
-                    this.updateTotalDisplay();
-                } else {
-                    alert('Debe haber al menos un sabor');
-                }
-            }
-            
-            updateTotalDisplay() {
-                const rows = document.querySelectorAll('.flavor-row');
-                let totalGeneral = 0;
-                let totalQueso = 0;
-                let totalZarzamora = 0;
-                
-                rows.forEach(row => {
-                    const select = row.querySelector('.flavor-select');
-                    const input = row.querySelector('.flavor-quantity-input');
-                    const cantidad = parseInt(input.value) || 0;
-                    
-                    totalGeneral += cantidad;
-                    
-                    if (select.value === 'queso') {
-                        totalQueso += cantidad;
-                    } else {
-                        totalZarzamora += cantidad;
-                    }
-                });
-                
-                document.querySelector('.total-number').textContent = `${totalGeneral} pays`;
-                document.getElementById('totalQueso').textContent = totalQueso;
-                document.getElementById('totalZarzamora').textContent = totalZarzamora;
-            }
-            
-            getFlavorsFromForm() {
-                const rows = document.querySelectorAll('.flavor-row');
-                const flavors = [];
-                rows.forEach(row => {
-                    flavors.push({
-                        tipo: row.querySelector('.flavor-select').value,
-                        cantidad: parseInt(row.querySelector('.flavor-quantity-input').value) || 1
-                    });
-                });
-                return flavors;
-            }
-            
-            addOrder(event) {
-                event.preventDefault();
-                
-                const nombre = document.getElementById('nombre').value.trim();
-                const departamento = document.getElementById('departamento').value;
-                const flavors = this.getFlavorsFromForm();
-                
-                if (!nombre || !departamento) {
-                    alert('Completa todos los campos');
-                    return;
-                }
-                
-                const total = flavors.reduce((sum, f) => sum + f.cantidad, 0);
-                
-                if (total === 0) {
-                    alert('Agrega al menos 1 pay');
-                    return;
-                }
-                
-                this.orders.push({ nombre, departamento, flavors, total });
-                this.saveOrders();
-                this.renderOrders();
-                
-                document.getElementById('nombre').value = '';
-                document.getElementById('departamento').value = '';
-                document.getElementById('flavors-container').innerHTML = '';
-                this.flavorCount = 1;
-                this.addFlavorRow();
-            }
-            
-            deleteOrder(index) {
-                this.orders.splice(index, 1);
-                this.saveOrders();
-                this.renderOrders();
-            }
-            
-            clearAllOrders() {
-                if (this.orders.length && confirm('¿Eliminar todos los pedidos?')) {
-                    this.orders = [];
-                    this.saveOrders();
-                    this.renderOrders();
-                }
-            }
-            
-            updateStats() {
-                const totalPays = this.orders.reduce((sum, o) => sum + o.total, 0);
-                document.getElementById('totalPays').textContent = totalPays;
-                document.getElementById('totalOrders').textContent = this.orders.length;
-                
-                // Actualizar también el desglose por sabor en el total general
-                let totalQueso = 0;
-                let totalZarzamora = 0;
-                
-                this.orders.forEach(order => {
-                    order.flavors.forEach(flavor => {
-                        if (flavor.tipo === 'queso') {
-                            totalQueso += flavor.cantidad;
-                        } else {
-                            totalZarzamora += flavor.cantidad;
-                        }
-                    });
-                });
-                
-                document.getElementById('totalQueso').textContent = totalQueso;
-                document.getElementById('totalZarzamora').textContent = totalZarzamora;
-            }
-            
-            renderOrders() {
-                const list = document.getElementById('ordersList');
-                
-                if (this.orders.length === 0) {
-                    list.innerHTML = '<li class="empty-list">No hay pedidos registrados</li>';
-                    this.updateStats();
-                    return;
-                }
-                
-                list.innerHTML = this.orders.map((order, index) => `
-                    <li class="order-item">
-                        <div class="order-header">
-                            <span class="order-name">${order.nombre}</span>
-                            <span class="order-department">${order.departamento}</span>
-                        </div>
-                        <div class="flavors-list">
-                            ${order.flavors.map(f => `
-                                <span class="flavor-tag ${f.tipo}">
-                                    ${f.tipo === 'queso' ? '🧀' : '🍇'} ${f.tipo === 'queso' ? 'Queso' : 'Zarzamora'}: ${f.cantidad}
-                                </span>
-                            `).join('')}
-                        </div>
-                        <div class="order-total">
-                            Total: ${order.total} ${order.total === 1 ? 'pay' : 'pays'}
-                        </div>
-                        <button class="delete-item" onclick="orderManager.deleteOrder(${index})">✕</button>
-                    </li>
-                `).join('');
-                
-                this.updateStats();
-            }
-            
-            exportOrders() {
-                if (this.orders.length === 0) {
-                    alert('No hay pedidos para exportar');
-                    return;
-                }
-                
-                const rows = [['Nombre', 'Departamento', 'Sabores', 'Total Pays']];
-                
-                this.orders.forEach(order => {
-                    const sabores = order.flavors.map(f => 
-                        `${f.tipo === 'queso' ? 'Queso' : 'Zarzamora'}:${f.cantidad}`
-                    ).join(' | ');
-                    
-                    rows.push([order.nombre, order.departamento, sabores, order.total]);
-                });
-                
-                const csv = rows.map(r => r.join(',')).join('\n');
-                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `pays_${new Date().toISOString().slice(0,10)}.csv`;
-                link.click();
-            }
-            
-            initEventListeners() {
-                document.getElementById('orderForm').addEventListener('submit', (e) => this.addOrder(e));
-                document.getElementById('exportBtn').addEventListener('click', () => this.exportOrders());
-                document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllOrders());
-                document.getElementById('addFlavorBtn').addEventListener('click', () => this.addFlavorRow());
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            window.orderManager = new OrderManager();
-        });
-    </script>
+
+    <!-- ══ PAGE: PEDIDOS ══ -->
+    <div class="page" id="page-pedidos">
+      <div class="section-head"><h2>Todos los pedidos</h2></div>
+      <div class="orders-actions">
+        <button class="action-chip export" id="btnExport">📤 Exportar CSV</button>
+        <button class="action-chip danger" id="btnClear">🗑 Limpiar todo</button>
+      </div>
+      <ul class="orders-list" id="ordersList">
+        <li>
+          <div class="empty-state">
+            <div class="empty-icon">🥧</div>
+            <div class="empty-label">Sin pedidos aún</div>
+            <div class="empty-sub">Ve a "Nuevo" para registrar uno</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ══ PAGE: RESUMEN ══ -->
+    <div class="page" id="page-resumen">
+      <div class="section-head"><h2>Resumen general</h2></div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🥧</div>
+          <div class="stat-value" id="statTotalPays">0</div>
+          <div class="stat-label">Pays totales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-value" id="statTotalOrders">0</div>
+          <div class="stat-label">Pedidos</div>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>Por sabor</h2></div>
+      <div class="flavor-stat-bar">
+        <div class="flavor-stat-row">
+          <span class="flavor-stat-label">🧀 Queso</span>
+          <div class="bar-track"><div class="bar-fill queso" id="barQueso" style="width:0%"></div></div>
+          <span class="flavor-stat-count" id="statQueso">0</span>
+        </div>
+        <div class="flavor-stat-row">
+          <span class="flavor-stat-label">🍇 Zarzamora</span>
+          <div class="bar-track"><div class="bar-fill zarza" id="barZarza" style="width:0%"></div></div>
+          <span class="flavor-stat-count" id="statZarza">0</span>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>Por departamento</h2></div>
+      <div class="dept-list" id="deptList">
+        <div class="dept-row"><span class="dept-name" style="color:var(--text-3)">Sin datos aún</span></div>
+      </div>
+    </div>
+
+  </div><!-- /scroll-area -->
+
+  <!-- TAB BAR -->
+  <nav class="tab-bar">
+    <button class="tab active" data-page="nuevo">
+      <div class="tab-icon">✏️</div>
+      <span class="tab-label">Nuevo</span>
+    </button>
+    <button class="tab" data-page="pedidos">
+      <div class="tab-icon">📋</div>
+      <span class="tab-label">Pedidos</span>
+    </button>
+    <button class="tab" data-page="resumen">
+      <div class="tab-icon">📊</div>
+      <span class="tab-label">Resumen</span>
+    </button>
+  </nav>
+
+</div><!-- /app -->
+
+<script>
+/* ══════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════ */
+function toast(msg, type = 'success', ms = 2800) {
+  const stack = document.getElementById('toastStack');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  stack.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 350);
+  }, ms);
+  if (navigator.vibrate) navigator.vibrate(type === 'error' ? [30,20,30] : 20);
+}
+
+function confirm(title, body, okLabel = 'Eliminar') {
+  return new Promise(res => {
+    const ov = document.getElementById('overlay');
+    document.getElementById('sheetTitle').textContent = title;
+    document.getElementById('sheetBody').textContent  = body;
+    document.getElementById('sheetOk').textContent    = okLabel;
+    ov.classList.add('show');
+    const ok  = () => { ov.classList.remove('show'); cleanup(); res(true);  };
+    const can = () => { ov.classList.remove('show'); cleanup(); res(false); };
+    function cleanup() {
+      document.getElementById('sheetOk').removeEventListener('click', ok);
+      document.getElementById('sheetCancel').removeEventListener('click', can);
+    }
+    document.getElementById('sheetOk').addEventListener('click', ok);
+    document.getElementById('sheetCancel').addEventListener('click', can);
+    ov.addEventListener('click', e => { if (e.target === ov) can(); }, { once: true });
+  });
+}
+
+/* ── Safe Storage ── */
+let storageOk = true;
+try { localStorage.setItem('__t','1'); localStorage.removeItem('__t'); }
+catch(e) { storageOk = false; document.getElementById('storageWarn').classList.add('show'); }
+
+function lsGet(k) { try { return storageOk ? localStorage.getItem(k) : null; } catch(e){ return null; } }
+function lsSet(k,v) {
+  try { if(storageOk) localStorage.setItem(k,v); }
+  catch(e) { if(e.name==='QuotaExceededError') toast('⚠️ Almacenamiento lleno — exporta los pedidos','warning',4000); }
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const page = tab.dataset.page;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(`page-${page}`).classList.add('active');
+    document.querySelector('.scroll-area').scrollTop = 0;
+    if (page === 'resumen') renderResumen();
+  });
+});
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let orders = [];
+try { const s = lsGet('pays_orders_v2'); orders = s ? JSON.parse(s) : []; }
+catch(e) { orders = []; }
+
+function saveOrders() {
+  lsSet('pays_orders_v2', JSON.stringify(orders));
+  updateHeaderBadge();
+}
+
+function updateHeaderBadge() {
+  const n = orders.length;
+  document.getElementById('headerBadge').textContent = `${n} ${n===1?'pedido':'pedidos'}`;
+}
+
+/* ══════════════════════════════════════
+   FLAVOR ROWS
+══════════════════════════════════════ */
+let flavorId = 0;
+
+function addFlavorRow(tipo='queso', qty=1) {
+  const id = ++flavorId;
+  const container = document.getElementById('flavorRows');
+  const div = document.createElement('div');
+  div.className = 'flavor-card';
+  div.id = `fr-${id}`;
+  div.innerHTML = `
+    <div class="flavor-pill">
+      <select class="fl-select">
+        <option value="queso" ${tipo==='queso'?'selected':''}>🧀 Queso</option>
+        <option value="zarzamora" ${tipo==='zarzamora'?'selected':''}>🍇 Zarzamora</option>
+      </select>
+    </div>
+    <div class="qty-control">
+      <button type="button" class="qty-btn fl-minus">−</button>
+      <input type="number" class="qty-num fl-qty" value="${qty}" min="1" max="99" inputmode="numeric">
+      <button type="button" class="qty-btn fl-plus">+</button>
+    </div>
+    <button type="button" class="remove-row fl-remove" aria-label="Quitar">✕</button>
+  `;
+  container.appendChild(div);
+
+  const sel  = div.querySelector('.fl-select');
+  const inp  = div.querySelector('.fl-qty');
+  const mn   = div.querySelector('.fl-minus');
+  const pl   = div.querySelector('.fl-plus');
+  const rm   = div.querySelector('.fl-remove');
+
+  const upd = () => updateStrip();
+  sel.addEventListener('change', upd);
+  inp.addEventListener('input', () => {
+    let v = parseInt(inp.value)||1;
+    if(v<1) inp.value=1;
+    if(v>99) inp.value=99;
+    upd();
+  });
+  mn.addEventListener('click', () => {
+    const v = parseInt(inp.value)||1;
+    if(v>1){ inp.value=v-1; upd(); }
+    else toast('Mínimo 1 pay','warning',1600);
+  });
+  pl.addEventListener('click', () => {
+    const v = parseInt(inp.value)||1;
+    if(v<99){ inp.value=v+1; upd(); }
+    else toast('Máximo 99 por fila','warning',1600);
+  });
+  rm.addEventListener('click', () => {
+    if(document.querySelectorAll('.flavor-card').length<=1) {
+      toast('Debe haber al menos un sabor ⚠️','warning'); return;
+    }
+    div.style.opacity='0'; div.style.transform='translateX(16px)';
+    div.style.transition='all .18s ease';
+    setTimeout(()=>{ div.remove(); upd(); }, 180);
+  });
+
+  upd();
+}
+
+function getFlavorData() {
+  return Array.from(document.querySelectorAll('.flavor-card')).map(c => ({
+    tipo:     c.querySelector('.fl-select').value,
+    cantidad: Math.max(1, parseInt(c.querySelector('.fl-qty').value)||1)
+  }));
+}
+
+function updateStrip() {
+  const flavors = getFlavorData();
+  const total = flavors.reduce((s,f)=>s+f.cantidad,0);
+  const queso = flavors.filter(f=>f.tipo==='queso').reduce((s,f)=>s+f.cantidad,0);
+  const zarza = total - queso;
+  document.getElementById('stripTotal').textContent = total;
+  document.getElementById('stripQueso').textContent = queso;
+  document.getElementById('stripZarza').textContent = zarza;
+}
+
+document.getElementById('btnAddFlavor').addEventListener('click', () => addFlavorRow());
+
+// init with one row
+addFlavorRow();
+
+/* ══════════════════════════════════════
+   VALIDATION
+══════════════════════════════════════ */
+function fieldOk(rowId, errId)   { document.getElementById(rowId).classList.remove('error'); document.getElementById(errId).classList.remove('show'); }
+function fieldErr(rowId, errId)  { document.getElementById(rowId).classList.add('error');    document.getElementById(errId).classList.add('show'); }
+
+document.getElementById('inputNombre').addEventListener('input', () => fieldOk('rowNombre','errNombre'));
+document.getElementById('inputDepto').addEventListener('change', () => fieldOk('rowDepto','errDepto'));
+
+function validateForm() {
+  let ok = true;
+  const nombre = document.getElementById('inputNombre').value.trim();
+  const depto  = document.getElementById('inputDepto').value;
+  if(!nombre || nombre.length < 2) { fieldErr('rowNombre','errNombre'); ok=false; }
+  else fieldOk('rowNombre','errNombre');
+  if(!depto) { fieldErr('rowDepto','errDepto'); ok=false; }
+  else fieldOk('rowDepto','errDepto');
+  const total = getFlavorData().reduce((s,f)=>s+f.cantidad,0);
+  if(total===0) { toast('Agrega al menos 1 pay ⚠️','warning'); ok=false; }
+  return ok;
+}
+
+/* ══════════════════════════════════════
+   SUBMIT
+══════════════════════════════════════ */
+document.getElementById('btnSubmit').addEventListener('click', () => {
+  if(!validateForm()) return;
+
+  const nombre = document.getElementById('inputNombre').value.trim();
+  const depto  = document.getElementById('inputDepto').value;
+  const flavors = getFlavorData();
+  const total = flavors.reduce((s,f)=>s+f.cantidad,0);
+
+  orders.push({ nombre, depto, flavors, total, ts: Date.now() });
+  saveOrders();
+  renderOrders();
+
+  // Reset
+  document.getElementById('inputNombre').value = '';
+  document.getElementById('inputDepto').value = '';
+  document.getElementById('flavorRows').innerHTML = '';
+  flavorId = 0;
+  addFlavorRow();
+  updateStrip();
+
+  toast(`✅ Pedido de ${nombre} agregado`,'success');
+
+  // Go to pedidos tab
+  setTimeout(() => {
+    document.querySelector('[data-page="pedidos"]').click();
+  }, 600);
+});
+
+/* ══════════════════════════════════════
+   RENDER ORDERS
+══════════════════════════════════════ */
+function renderOrders() {
+  const list = document.getElementById('ordersList');
+  if(orders.length===0) {
+    list.innerHTML = `
+      <li><div class="empty-state">
+        <div class="empty-icon">🥧</div>
+        <div class="empty-label">Sin pedidos aún</div>
+        <div class="empty-sub">Ve a "Nuevo" para registrar uno</div>
+      </div></li>`;
+    updateHeaderBadge();
+    return;
+  }
+
+  list.innerHTML = orders.map((o,i) => `
+    <li>
+      <div class="order-card">
+        <div class="order-card-top">
+          <span class="order-name">${escHtml(o.nombre)}</span>
+          <span class="order-dept">${escHtml(o.depto)}</span>
+        </div>
+        <div class="order-card-flavors">
+          ${o.flavors.map(f=>`
+            <span class="flavor-badge ${f.tipo}">
+              ${f.tipo==='queso'?'🧀 Queso':'🍇 Zarzamora'} · ${f.cantidad}
+            </span>`).join('')}
+        </div>
+        <div class="order-card-footer">
+          <span class="order-total-text">Total <strong>${o.total}</strong> ${o.total===1?'pay':'pays'}</span>
+          <button class="delete-btn" onclick="deleteOrder(${i})" aria-label="Eliminar">✕</button>
+        </div>
+      </div>
+    </li>
+  `).join('');
+
+  updateHeaderBadge();
+}
+
+async function deleteOrder(i) {
+  const o = orders[i];
+  const ok = await confirm('¿Eliminar pedido?', `Se quitará el pedido de ${o.nombre} (${o.total} ${o.total===1?'pay':'pays'}).`);
+  if(!ok) return;
+  orders.splice(i,1);
+  saveOrders();
+  renderOrders();
+  toast('Pedido eliminado 🗑','info');
+}
+
+document.getElementById('btnClear').addEventListener('click', async () => {
+  if(orders.length===0){ toast('No hay pedidos para limpiar','warning'); return; }
+  const ok = await confirm('¿Limpiar todo?', `Se eliminarán ${orders.length} pedido${orders.length>1?'s':''}. No se puede deshacer.`);
+  if(!ok) return;
+  orders = [];
+  saveOrders();
+  renderOrders();
+  renderResumen();
+  toast('Todo limpiado 🗑','info');
+});
+
+/* ══════════════════════════════════════
+   EXPORT CSV
+══════════════════════════════════════ */
+document.getElementById('btnExport').addEventListener('click', () => {
+  if(orders.length===0){ toast('No hay pedidos para exportar','warning'); return; }
+  try {
+    const rows = [['Nombre','Departamento','Sabores','Total']];
+    orders.forEach(o => {
+      const sab = o.flavors.map(f=>`${f.tipo==='queso'?'Queso':'Zarzamora'}:${f.cantidad}`).join(' | ');
+      rows.push([o.nombre, o.depto, sab, o.total]);
+    });
+    const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href=url; a.download=`pays_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+    toast('📤 CSV exportado','success');
+  } catch(e) {
+    toast('❌ Error al exportar','error');
+  }
+});
+
+/* ══════════════════════════════════════
+   RESUMEN PAGE
+══════════════════════════════════════ */
+function renderResumen() {
+  const totalPays  = orders.reduce((s,o)=>s+o.total,0);
+  const queso = orders.reduce((s,o)=>s+o.flavors.filter(f=>f.tipo==='queso').reduce((a,f)=>a+f.cantidad,0),0);
+  const zarza = orders.reduce((s,o)=>s+o.flavors.filter(f=>f.tipo==='zarzamora').reduce((a,f)=>a+f.cantidad,0),0);
+  const max   = Math.max(queso, zarza, 1);
+
+  document.getElementById('statTotalPays').textContent  = totalPays;
+  document.getElementById('statTotalOrders').textContent = orders.length;
+  document.getElementById('statQueso').textContent = queso;
+  document.getElementById('statZarza').textContent = zarza;
+  document.getElementById('barQueso').style.width  = `${(queso/max)*100}%`;
+  document.getElementById('barZarza').style.width  = `${(zarza/max)*100}%`;
+
+  // Dept breakdown
+  const deptMap = {};
+  orders.forEach(o => {
+    deptMap[o.depto] = (deptMap[o.depto]||0) + o.total;
+  });
+  const sorted = Object.entries(deptMap).sort((a,b)=>b[1]-a[1]);
+
+  const deptList = document.getElementById('deptList');
+  if(sorted.length===0) {
+    deptList.innerHTML = '<div class="dept-row"><span class="dept-name" style="color:var(--text-3)">Sin datos aún</span></div>';
+  } else {
+    deptList.innerHTML = sorted.map(([name,count])=>`
+      <div class="dept-row">
+        <span class="dept-name">${escHtml(name)}</span>
+        <span class="dept-count">${count} ${count===1?'pay':'pays'}</span>
+      </div>`).join('');
+  }
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+renderOrders();
+renderResumen();
+updateHeaderBadge();
+</script>
 </body>
 </html>
-
