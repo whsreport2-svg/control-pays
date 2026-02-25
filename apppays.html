@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="icono-pay.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icono-pay-180.png">
     
-    <title>Pays Control · Pastel Vibrante</title>
+    <title>Pays Control · by Emily Zuno</title>
     <style>
         * {
             margin: 0;
@@ -24,15 +24,21 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #FFE5E5; /* Rosa pastel más vivo */
+            background: #FFE5E5;
             min-height: 100vh;
-            color: #4A3B4E; /* Texto más oscuro para mejor contraste */
+            color: #4A3B4E;
+            display: flex;
+            flex-direction: column;
         }
         
         .status-bar {
             background: #FFE5E5;
             height: 44px;
             width: 100%;
+        }
+        
+        .main-content {
+            flex: 1;
         }
         
         .container {
@@ -49,7 +55,7 @@
         .app-header h1 {
             font-size: 36px;
             font-weight: 700;
-            color: #E89393; /* Rosa más intenso */
+            color: #E89393;
             margin-bottom: 6px;
             letter-spacing: -0.5px;
             text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
@@ -57,7 +63,7 @@
         
         .app-header .subtitle {
             font-size: 16px;
-            color: #B48686; /* Rosa más oscuro */
+            color: #B48686;
             font-weight: 500;
         }
         
@@ -78,7 +84,7 @@
             display: block;
             font-size: 14px;
             font-weight: 600;
-            color: #E89393; /* Rosa vibrante */
+            color: #E89393;
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -154,7 +160,7 @@
         }
         
         .remove-flavor {
-            background: #FFB8B8; /* Rosa más vivo */
+            background: #FFB8B8;
             color: #FFFFFF;
             border: none;
             width: 44px;
@@ -193,24 +199,91 @@
             border-style: solid;
         }
         
+        /* TOTAL DISPLAY MEJORADO - CON DESGLOSE */
         .total-display {
-            background: #FFE0E0; /* Rosa más vibrante */
-            color: #E86A6A; /* Texto más contrastante */
-            padding: 20px;
+            background: #FFE0E0;
             border-radius: 20px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 22px;
             margin: 28px 0 24px 0;
             box-shadow: 0 6px 15px rgba(255, 158, 158, 0.3);
             border: 2px solid #FFC1C1;
-            letter-spacing: 0.5px;
+            overflow: hidden;
+        }
+        
+        .total-main {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #FFC1C1;
+        }
+        
+        .total-main .total-label {
+            font-size: 14px;
+            color: #B48686;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        
+        .total-main .total-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #E86A6A;
+            line-height: 1.2;
+        }
+        
+        .total-breakdown {
+            display: flex;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .breakdown-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            border-radius: 12px;
+        }
+        
+        .breakdown-item.queso {
+            background: #FFEAB3;
+            margin-right: 6px;
+        }
+        
+        .breakdown-item.zarzamora {
+            background: #FFD1D1;
+            margin-left: 6px;
+        }
+        
+        .breakdown-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .breakdown-label.queso {
+            color: #8B6F3C;
+        }
+        
+        .breakdown-label.zarzamora {
+            color: #A15555;
+        }
+        
+        .breakdown-number {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .breakdown-number.queso {
+            color: #8B6F3C;
+        }
+        
+        .breakdown-number.zarzamora {
+            color: #A15555;
         }
         
         .add-btn {
             width: 100%;
             padding: 20px;
-            background: #FF9E9E; /* Rosa más intenso */
+            background: #FF9E9E;
             border: none;
             border-radius: 22px;
             color: white;
@@ -266,7 +339,7 @@
         }
         
         .export-btn {
-            background: #A8E6CF; /* Verde menta más vivo */
+            background: #A8E6CF;
             color: #2F5E4A;
         }
         
@@ -355,12 +428,12 @@
         }
         
         .flavor-tag.queso {
-            background: #FFEAB3; /* Amarillo pastel más vivo */
+            background: #FFEAB3;
             color: #8B6F3C;
         }
         
         .flavor-tag.zarzamora {
-            background: #FFD1D1; /* Rosa pastel más vivo */
+            background: #FFD1D1;
             color: #A15555;
         }
         
@@ -428,6 +501,33 @@
             font-size: 20px;
         }
         
+        .app-footer {
+            text-align: center;
+            padding: 24px 0 16px 0;
+            margin-top: 20px;
+            border-top: 1px solid #FFD6D6;
+            background: transparent;
+            width: 100%;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #B48686;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+        
+        .footer-text .highlight {
+            color: #E86A6A;
+            font-weight: 600;
+            background: rgba(255, 232, 232, 0.5);
+            padding: 4px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-left: 4px;
+            border: 1px solid #FFC9C9;
+        }
+        
         @media (max-width: 400px) {
             .container {
                 padding: 0 16px 20px 16px;
@@ -460,73 +560,112 @@
                 gap: 12px;
                 text-align: center;
             }
+            
+            .total-breakdown {
+                flex-direction: column;
+            }
+            
+            .breakdown-item.queso {
+                margin-right: 0;
+                margin-bottom: 6px;
+            }
+            
+            .breakdown-item.zarzamora {
+                margin-left: 0;
+            }
+            
+            .footer-text {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="status-bar"></div>
     
-    <div class="container">
-        <div class="app-header">
-            <h1>Pays Control</h1>
-            <div class="subtitle">Registra pedidos · Pastel vibrante</div>
+    <div class="main-content">
+        <div class="container">
+            <div class="app-header">
+                <h1>Pays Control</h1>
+                <div class="subtitle">Registra pedidos · Pastel vibrante</div>
+            </div>
+            
+            <form id="orderForm">
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>👤 NOMBRE</label>
+                        <input type="text" id="nombre" placeholder="Ej. Ana García" required autocomplete="off">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🏢 DEPARTAMENTO</label>
+                        <select id="departamento" class="department-select" required>
+                            <option value="" disabled selected>Selecciona departamento</option>
+                            <option value="ALMACEN">Almacén</option>
+                            <option value="IT">IT</option>
+                            <option value="MATERIALES">Materiales</option>
+                            <option value="FA">FA</option>
+                            <option value="PRODUCTO">Producto</option>
+                            <option value="PRUEBAS L10">Pruebas L10</option>
+                            <option value="PRUEBAS L6">Pruebas L6</option>
+                            <option value="PROCESOS">Procesos</option>
+                            <option value="NPI">NPI</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flavors-section">
+                        <label>🍰 SABORES Y CANTIDADES</label>
+                        <div id="flavors-container"></div>
+                        <button type="button" id="addFlavorBtn" class="add-flavor-btn">+ Agregar otro sabor</button>
+                    </div>
+                    
+                    <!-- TOTAL DISPLAY CON DESGLOSE -->
+                    <div id="totalDisplay" class="total-display">
+                        <div class="total-main">
+                            <div class="total-label">TOTAL GENERAL</div>
+                            <div class="total-number">0 pays</div>
+                        </div>
+                        <div class="total-breakdown">
+                            <div class="breakdown-item queso">
+                                <div class="breakdown-label queso">🧀 QUESO</div>
+                                <div class="breakdown-number queso" id="totalQueso">0</div>
+                            </div>
+                            <div class="breakdown-item zarzamora">
+                                <div class="breakdown-label zarzamora">🍇 ZARZAMORA</div>
+                                <div class="breakdown-number zarzamora" id="totalZarzamora">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="add-btn">➕ Agregar pedido</button>
+                </div>
+            </form>
+            
+            <div class="list-section">
+                <div class="list-header">
+                    <span class="list-title">📋 Pedidos</span>
+                    <div class="action-buttons">
+                        <button id="clearAllBtn" class="action-btn clear-btn">🗑️ Limpiar</button>
+                        <button id="exportBtn" class="action-btn export-btn">📤 Exportar</button>
+                    </div>
+                </div>
+                
+                <ul id="ordersList" class="orders-list">
+                    <li class="empty-list">No hay pedidos registrados</li>
+                </ul>
+                
+                <div class="stats">
+                    <span>Total pays <span id="totalPays">0</span></span>
+                    <span>Pedidos <span id="totalOrders">0</span></span>
+                </div>
+            </div>
         </div>
-        
-        <form id="orderForm">
-            <div class="form-card">
-                <div class="form-group">
-                    <label>👤 NOMBRE</label>
-                    <input type="text" id="nombre" placeholder="Ej. Ana García" required autocomplete="off">
-                </div>
-                
-                <div class="form-group">
-                    <label>🏢 DEPARTAMENTO</label>
-                    <select id="departamento" class="department-select" required>
-                        <option value="" disabled selected>Selecciona departamento</option>
-                        <option value="ALMACEN">Almacén</option>
-                        <option value="IT">IT</option>
-                        <option value="MATERIALES">Materiales</option>
-                        <option value="FA">FA</option>
-                        <option value="PRODUCTO">Producto</option>
-                        <option value="PRUEBAS L10">Pruebas L10</option>
-                        <option value="PRUEBAS L6">Pruebas L6</option>
-                        <option value="PROCESOS">Procesos</option>
-                        <option value="NPI">NPI</option>
-                        <option value="OTRO">Otro</option>
-                    </select>
-                </div>
-                
-                <div class="flavors-section">
-                    <label>🍰 SABORES Y CANTIDADES</label>
-                    <div id="flavors-container"></div>
-                    <button type="button" id="addFlavorBtn" class="add-flavor-btn">+ Agregar otro sabor</button>
-                </div>
-                
-                <div id="totalDisplay" class="total-display">
-                    Total: 0 pays
-                </div>
-                
-                <button type="submit" class="add-btn">➕ Agregar pedido</button>
-            </div>
-        </form>
-        
-        <div class="list-section">
-            <div class="list-header">
-                <span class="list-title">📋 Pedidos</span>
-                <div class="action-buttons">
-                    <button id="clearAllBtn" class="action-btn clear-btn">🗑️ Limpiar</button>
-                    <button id="exportBtn" class="action-btn export-btn">📤 Exportar</button>
-                </div>
-            </div>
-            
-            <ul id="ordersList" class="orders-list">
-                <li class="empty-list">No hay pedidos registrados</li>
-            </ul>
-            
-            <div class="stats">
-                <span>Total pays <span id="totalPays">0</span></span>
-                <span>Pedidos <span id="totalOrders">0</span></span>
-            </div>
+    </div>
+    
+    <div class="app-footer">
+        <div class="footer-text">
+            Page designed by <span class="highlight">MB programmer</span>
         </div>
     </div>
     
@@ -552,6 +691,7 @@
             saveOrders() {
                 localStorage.setItem('pieOrdersVibrant', JSON.stringify(this.orders));
                 this.updateStats();
+                this.updateTotalDisplay();
             }
             
             addFlavorRow() {
@@ -596,12 +736,27 @@
             
             updateTotalDisplay() {
                 const rows = document.querySelectorAll('.flavor-row');
-                let total = 0;
+                let totalGeneral = 0;
+                let totalQueso = 0;
+                let totalZarzamora = 0;
+                
                 rows.forEach(row => {
+                    const select = row.querySelector('.flavor-select');
                     const input = row.querySelector('.flavor-quantity-input');
-                    total += parseInt(input.value) || 0;
+                    const cantidad = parseInt(input.value) || 0;
+                    
+                    totalGeneral += cantidad;
+                    
+                    if (select.value === 'queso') {
+                        totalQueso += cantidad;
+                    } else {
+                        totalZarzamora += cantidad;
+                    }
                 });
-                document.getElementById('totalDisplay').textContent = `Total: ${total} pays`;
+                
+                document.querySelector('.total-number').textContent = `${totalGeneral} pays`;
+                document.getElementById('totalQueso').textContent = totalQueso;
+                document.getElementById('totalZarzamora').textContent = totalZarzamora;
             }
             
             getFlavorsFromForm() {
@@ -664,6 +819,23 @@
                 const totalPays = this.orders.reduce((sum, o) => sum + o.total, 0);
                 document.getElementById('totalPays').textContent = totalPays;
                 document.getElementById('totalOrders').textContent = this.orders.length;
+                
+                // Actualizar también el desglose por sabor en el total general
+                let totalQueso = 0;
+                let totalZarzamora = 0;
+                
+                this.orders.forEach(order => {
+                    order.flavors.forEach(flavor => {
+                        if (flavor.tipo === 'queso') {
+                            totalQueso += flavor.cantidad;
+                        } else {
+                            totalZarzamora += flavor.cantidad;
+                        }
+                    });
+                });
+                
+                document.getElementById('totalQueso').textContent = totalQueso;
+                document.getElementById('totalZarzamora').textContent = totalZarzamora;
             }
             
             renderOrders() {
