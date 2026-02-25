@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Control de Pedidos - Pays Multi-sabor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 16px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 28px;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .department-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+        }
+        
+        .multi-flavor-section {
+            background: #f7fafc;
+            border-radius: 20px;
+            padding: 16px;
+            margin: 16px 0;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .flavor-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .flavor-type {
+            flex: 2;
+        }
+        
+        .flavor-quantity {
+            flex: 1;
+        }
+        
+        .flavor-type select, .flavor-quantity input {
+            padding: 12px;
+            border-radius: 12px;
+        }
+        
+        .remove-flavor {
+            background: #fc8181;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .remove-flavor:active {
+            background: #f56565;
+        }
+        
+        .add-flavor-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        .add-flavor-btn:active {
+            background: #3182ce;
+        }
+        
+        .total-quantity {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 30px;
+            text-align: center;
+            font-weight: 600;
+            margin: 16px 0;
+        }
+        
+        .add-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+        
+        .add-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 10px rgba(72, 187, 120, 0.2);
+        }
+        
+        .list-section {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+        
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .list-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .export-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .export-btn:active {
+            background: #38a169;
+        }
+        
+        .clear-btn {
+            background: #fc8181;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .clear-btn:active {
+            background: #f56565;
+        }
+        
+        .orders-list {
+            list-style: none;
+            max-height: 350px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .order-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s ease;
+            animation: slideIn 0.3s ease;
+            position: relative;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .order-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-right: 30px;
+        }
+        
+        .order-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2d3748;
+        }
+        
+        .order-department {
+            background: #e9d8fd;
+            color: #553c9a;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .flavors-list {
+            margin: 10px 0;
+        }
+        
+        .flavor-tag {
+            display: inline-flex;
+            align-items: center;
+            background: #f7fafc;
+            border-radius: 30px;
+            padding: 6px 12px;
+            margin: 0 8px 8px 0;
+            font-size: 14px;
+        }
+        
+        .flavor-tag.queso {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .flavor-tag.zarzamora {
+            background: #fed7d7;
+            color: #9b2c2c;
+        }
+        
+        .order-total {
+            font-weight: 700;
+            color: #2d3748;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #e2e8f0;
+        }
+        
+        .delete-item {
+            background: none;
+            border: none;
+            color: #fc8181;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+        
+        .delete-item:active {
+            background: #fff5f5;
+        }
+        
+        .empty-list {
+            text-align: center;
+            color: #a0aec0;
+            padding: 32px 16px;
+            font-style: italic;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 400px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .list-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .export-btn, .clear-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .flavor-row {
+                flex-direction: column;
+            }
+            
+            .flavor-type, .flavor-quantity {
+                width: 100%;
+            }
+            
+            .remove-flavor {
+                width: 100%;
+                border-radius: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🥧 Control de Pays Multi-sabor</h1>
+        <p class="subtitle">Registra pedidos combinados por persona</p>
+        
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="nombre">👤 Nombre del solicitante</label>
+                <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="departamento">🏢 Departamento</label>
+                <select id="departamento" class="department-select" required>
+                    <option value="" disabled selected>Selecciona un departamento</option>
+                    <option value="ALMACEN">Almacén</option>
+                    <option value="IT">IT</option>
+                    <option value="MATERIALES">Materiales</option>
+                    <option value="FA">FA</option>
+                    <option value="PRODUCTO">Producto</option>
+                    <option value="PRUEBAS L10">Pruebas L10</option>
+                    <option value="PRUEBAS L6">Pruebas L6</option>
+                    <option value="PROCESOS">Procesos</option>
+                    <option value="NPI">NPI</option>
+                    <option value="OTRO">Otro</option>
+                </select>
+            </div>
+            
+            <div class="multi-flavor-section">
+                <label>🍰 Sabores y cantidades</label>
+                <div id="flavors-container">
+                    <!-- Las filas de sabores se agregarán aquí dinámicamente -->
+                </div>
+                <button type="button" id="addFlavorBtn" class="add-flavor-btn">+ Agregar otro sabor</button>
+                <div id="totalDisplay" class="total-quantity">
+                    Total de pays: 0
+                </div>
+            </div>
+            
+            <button type="submit" class="add-btn">📦 Agregar pedido completo</button>
+        </form>
+        
+        <div class="list-section">
+            <div class="list-header">
+                <span class="list-title">📋 Pedidos registrados</span>
+                <div style="display: flex; gap: 8px;">
+                    <button id="clearAllBtn" class="clear-btn">🗑️ Limpiar</button>
+                    <button id="exportBtn" class="export-btn">📤 Exportar</button>
+                </div>
+            </div>
+            
+            <ul id="ordersList" class="orders-list">
+                <li class="empty-list">No hay pedidos registrados</li>
+            </ul>
+            
+            <div class="stats" id="stats">
+                <span>Total de pays: <span id="totalPays">0</span></span>
+                <span>Pedidos: <span id="totalOrders">0</span></span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        class OrderManager {
+            constructor() {
+                this.orders = this.loadOrders();
+                this.flavorCount = 1;
+                this.initEventListeners();
+                this.renderOrders();
+                this.addFlavorRow(); // Agregar primera fila de sabor
+            }
+            
+            loadOrders() {
+                try {
+                    const saved = localStorage.getItem('pieOrdersMulti');
+                    return saved ? JSON.parse(saved) : [];
+                } catch (e) {
+                    console.error('Error loading orders:', e);
+                    return [];
+                }
+            }
+            
+            saveOrders() {
+                localStorage.setItem('pieOrdersMulti', JSON.stringify(this.orders));
+                this.updateStats();
+            }
+            
+            addFlavorRow() {
+                const container = document.getElementById('flavors-container');
+                const rowId = `flavor-${Date.now()}-${this.flavorCount}`;
+                
+                const row = document.createElement('div');
+                row.className = 'flavor-row';
+                row.id = rowId;
+                row.innerHTML = `
+                    <div class="flavor-type">
+                        <select class="flavor-select" required>
+                            <option value="queso" selected>🧀 Queso</option>
+                            <option value="zarzamora">🍇 Zarzamora</option>
+                        </select>
+                    </div>
+                    <div class="flavor-quantity">
+                        <input type="number" class="flavor-quantity-input" min="1" value="1" required>
+                    </div>
+                    <button type="button" class="remove-flavor" onclick="orderManager.removeFlavorRow('${rowId}')">✕</button>
+                `;
+                
+                container.appendChild(row);
+                this.flavorCount++;
+                this.updateTotalDisplay();
+                
+                // Agregar event listeners para actualizar total
+                const select = row.querySelector('.flavor-select');
+                const input = row.querySelector('.flavor-quantity-input');
+                select.addEventListener('change', () => this.updateTotalDisplay());
+                input.addEventListener('input', () => this.updateTotalDisplay());
+            }
+            
+            removeFlavorRow(rowId) {
+                const row = document.getElementById(rowId);
+                if (row && document.querySelectorAll('.flavor-row').length > 1) {
+                    row.remove();
+                    this.updateTotalDisplay();
+                } else {
+                    alert('Debe haber al menos un sabor');
+                }
+            }
+            
+            updateTotalDisplay() {
+                const rows = document.querySelectorAll('.flavor-row');
+                let total = 0;
+                
+                rows.forEach(row => {
+                    const input = row.querySelector('.flavor-quantity-input');
+                    total += parseInt(input.value) || 0;
+                });
+                
+                document.getElementById('totalDisplay').textContent = `Total de pays: ${total}`;
+            }
+            
+            getFlavorsFromForm() {
+                const rows = document.querySelectorAll('.flavor-row');
+                const flavors = [];
+                
+                rows.forEach(row => {
+                    const select = row.querySelector('.flavor-select');
+                    const input = row.querySelector('.flavor-quantity-input');
+                    
+                    flavors.push({
+                        tipo: select.value,
+                        cantidad: parseInt(input.value) || 1
+                    });
+                });
+                
+                return flavors;
+            }
+            
+            addOrder(event) {
+                event.preventDefault();
+                
+                const nombre = document.getElementById('nombre').value.trim();
+                const departamento = document.getElementById('departamento').value;
+                const flavors = this.getFlavorsFromForm();
+                
+                if (!nombre || !departamento) {
+                    alert('Por favor, completa el nombre y departamento');
+                    return;
+                }
+                
+                const totalCantidad = flavors.reduce((sum, f) => sum + f.cantidad, 0);
+                
+                if (totalCantidad === 0) {
+                    alert('Debes agregar al menos 1 pay');
+                    return;
+                }
+                
+                this.orders.push({
+                    nombre,
+                    departamento,
+                    flavors,
+                    total: totalCantidad,
+                    fecha: new Date().toISOString()
+                });
+                
+                this.saveOrders();
+                this.renderOrders();
+                
+                // Resetear formulario
+                document.getElementById('nombre').value = '';
+                document.getElementById('departamento').value = '';
+                
+                // Limpiar sabores y dejar solo uno
+                const container = document.getElementById('flavors-container');
+                container.innerHTML = '';
+                this.flavorCount = 1;
+                this.addFlavorRow();
+                
+                // Scroll al inicio de la lista
+                document.querySelector('.list-section').scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            deleteOrder(index) {
+                this.orders.splice(index, 1);
+                this.saveOrders();
+                this.renderOrders();
+            }
+            
+            clearAllOrders() {
+                if (this.orders.length === 0) return;
+                
+                if (confirm('¿Estás seguro de eliminar todos los pedidos?')) {
+                    this.orders = [];
+                    this.saveOrders();
+                    this.renderOrders();
+                }
+            }
+            
+            updateStats() {
+                const totalPays = this.orders.reduce((sum, order) => sum + order.total, 0);
+                document.getElementById('totalPays').textContent = totalPays;
+                document.getElementById('totalOrders').textContent = this.orders.length;
+            }
+            
+            renderOrders() {
+                const list = document.getElementById('ordersList');
+                
+                if (this.orders.length === 0) {
+                    list.innerHTML = '<li class="empty-list">No hay pedidos registrados</li>';
+                    this.updateStats();
+                    return;
+                }
+                
+                let html = '';
+                this.orders.forEach((order, index) => {
+                    // Crear etiquetas de sabores
+                    let flavorsHtml = '<div class="flavors-list">';
+                    order.flavors.forEach(flavor => {
+                        const icon = flavor.tipo === 'queso' ? '🧀' : '🍇';
+                        const tipoTexto = flavor.tipo === 'queso' ? 'Queso' : 'Zarzamora';
+                        flavorsHtml += `
+                            <span class="flavor-tag ${flavor.tipo}">
+                                ${icon} ${tipoTexto}: ${flavor.cantidad}
+                            </span>
+                        `;
+                    });
+                    flavorsHtml += '</div>';
+                    
+                    html += `
+                        <li class="order-item" data-index="${index}">
+                            <div class="order-item-header">
+                                <span class="order-name">${this.escapeHtml(order.nombre)}</span>
+                                <span class="order-department">${order.departamento}</span>
+                            </div>
+                            ${flavorsHtml}
+                            <div class="order-total">
+                                Total: ${order.total} ${order.total === 1 ? 'pay' : 'pays'}
+                            </div>
+                            <button class="delete-item" onclick="orderManager.deleteOrder(${index})">✕</button>
+                        </li>
+                    `;
+                });
+                
+                list.innerHTML = html;
+                this.updateStats();
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            exportOrders() {
+                if (this.orders.length === 0) {
+                    alert('No hay pedidos para exportar');
+                    return;
+                }
+                
+                // Crear CSV detallado
+                const rows = [];
+                
+                // Encabezados
+                rows.push(['Nombre', 'Departamento', 'Sabores (Tipo:Cantidad)', 'Total Pays', 'Fecha'].join(','));
+                
+                this.orders.forEach(order => {
+                    const saboresStr = order.flavors.map(f => 
+                        `${f.tipo === 'queso' ? 'Queso' : 'Zarzamora'}:${f.cantidad}`
+                    ).join(' | ');
+                    
+                    const fecha = new Date(order.fecha).toLocaleDateString('es-MX');
+                    
+                    rows.push([
+                        `"${order.nombre}"`,
+                        `"${order.departamento}"`,
+                        `"${saboresStr}"`,
+                        order.total,
+                        `"${fecha}"`
+                    ].join(','));
+                });
+                
+                const csvString = rows.join('\n');
+                const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' }); // \uFEFF para UTF-8 con BOM
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `pedidos_pays_${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+            
+            initEventListeners() {
+                document.getElementById('orderForm').addEventListener('submit', (e) => this.addOrder(e));
+                document.getElementById('exportBtn').addEventListener('click', () => this.exportOrders());
+                document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllOrders());
+                
+                document.getElementById('addFlavorBtn').addEventListener('click', () => {
+                    this.addFlavorRow();
+                });
+                
+                // Prevenir zoom en inputs en iOS
+                document.querySelectorAll('input, select').forEach(element => {
+                    element.addEventListener('touchstart', (e) => {
+                        e.stopPropagation();
+                    });
+                });
+            }
+        }
+        
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            window.orderManager = new OrderManager();
+        });
+    </script>
+</body>
+</html>
