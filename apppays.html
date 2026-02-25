@@ -4,23 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     
-    <!-- CONFIGURACIÓN PARA IPHONE - ICONO Y PANTALLA COMPLETA -->
+    <!-- CONFIGURACIÓN PARA IPHONE - MODO APP NATIVA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="🍰 Pays Control">
+    <meta name="apple-mobile-web-app-title" content="Pays Control">
     
-    <!-- ICONO PNG PROPIO - ¡CAMBIA EL NOMBRE SI ES NECESARIO! -->
+    <!-- ICONO PNG PROPIO -->
     <link rel="apple-touch-icon" href="icono-pay.png">
-    
-    <!-- Iconos para diferentes tamaños (recomendado para mejor calidad) -->
-    <link rel="apple-touch-icon" sizes="120x120" href="icono-pay-120.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icono-pay-152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icono-pay-180.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="icono-pay-167.png">
     
-    <title>Control de Pays - Multi-sabor</title>
+    <title>Pays Control</title>
     <style>
-        /* TODO EL MISMO ESTILO QUE ANTES - cópialo exactamente igual */
         * {
             margin: 0;
             padding: 0;
@@ -30,85 +24,115 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #F2F2F7; /* Fondo gris claro estilo iOS */
             min-height: 100vh;
-            padding: 16px;
-            color: #333;
+            color: #000;
+        }
+        
+        /* Barra de estado simulada para que se vea como app nativa */
+        .status-bar {
+            background: #F2F2F7;
+            height: 44px;
+            width: 100%;
         }
         
         .container {
             max-width: 500px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
+            padding: 0 16px 16px 16px;
+        }
+        
+        /* Header estilo app nativa */
+        .app-header {
+            padding: 20px 0 10px 0;
+            margin-bottom: 10px;
+        }
+        
+        .app-header h1 {
+            font-size: 34px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+        
+        .app-header .subtitle {
+            font-size: 15px;
+            color: #8E8E93;
+            font-weight: 400;
+        }
+        
+        /* Tarjetas estilo iOS */
+        .form-card {
+            background: #FFFFFF;
+            border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-        
-        h1 {
-            font-size: 28px;
-            color: #4a5568;
-            margin-bottom: 8px;
-            font-weight: 600;
-            text-align: center;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #718096;
-            margin-bottom: 24px;
-            font-size: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
         
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
         }
         
         label {
             display: block;
             font-size: 14px;
-            font-weight: 600;
-            color: #4a5568;
+            font-weight: 500;
+            color: #6C6C70;
             margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
         
+        /* Inputs estilo iOS */
         input, select {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
+            background: #F2F2F7;
+            border: 1px solid #E5E5EA;
+            border-radius: 12px;
+            font-size: 17px;
+            transition: all 0.2s ease;
             -webkit-appearance: none;
             appearance: none;
         }
         
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #007AFF;
+            background: #FFFFFF;
         }
         
         .department-select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 20px;
+            background-position: right 16px center;
+            background-size: 18px;
         }
         
-        .multi-flavor-section {
-            background: #f7fafc;
-            border-radius: 20px;
+        /* Sección de sabores */
+        .flavors-section {
+            background: #F8F8FC;
+            border-radius: 12px;
             padding: 16px;
             margin: 16px 0;
-            border: 2px solid #e2e8f0;
+        }
+        
+        .flavors-section label {
+            color: #8E8E93;
+            font-size: 13px;
+            margin-bottom: 12px;
         }
         
         .flavor-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
             margin-bottom: 12px;
         }
@@ -122,81 +146,83 @@
         }
         
         .flavor-type select, .flavor-quantity input {
+            background: #FFFFFF;
             padding: 12px;
-            border-radius: 12px;
+            font-size: 16px;
         }
         
         .remove-flavor {
-            background: #fc8181;
+            background: #FF3B30;
             color: white;
             border: none;
             width: 36px;
             height: 36px;
-            border-radius: 50%;
-            font-size: 20px;
+            border-radius: 10px;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.2s ease;
         }
         
         .remove-flavor:active {
-            background: #f56565;
+            background: #D70015;
         }
         
         .add-flavor-btn {
-            background: #4299e1;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
+            background: transparent;
+            color: #007AFF;
+            border: 1px dashed #007AFF;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.2s ease;
             width: 100%;
             margin-top: 8px;
         }
         
         .add-flavor-btn:active {
-            background: #3182ce;
+            background: rgba(0, 122, 255, 0.05);
         }
         
-        .total-quantity {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* Total display */
+        .total-display {
+            background: #007AFF;
             color: white;
-            padding: 12px;
-            border-radius: 30px;
+            padding: 16px;
+            border-radius: 12px;
             text-align: center;
             font-weight: 600;
-            margin: 16px 0;
+            font-size: 18px;
+            margin: 20px 0 0 0;
+            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
         }
         
+        /* Botón principal */
         .add-btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            padding: 18px;
+            background: #007AFF;
             border: none;
-            border-radius: 16px;
+            border-radius: 14px;
             color: white;
             font-size: 18px;
             font-weight: 600;
-            margin: 20px 0;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
         }
         
         .add-btn:active {
+            background: #005BBF;
             transform: scale(0.98);
-            box-shadow: 0 5px 10px rgba(72, 187, 120, 0.2);
         }
         
+        /* Lista de pedidos */
         .list-section {
-            background: #f8fafc;
-            border-radius: 20px;
-            padding: 16px;
             margin-top: 20px;
         }
         
@@ -204,75 +230,71 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 10px;
+            padding: 10px 0;
         }
         
         .list-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
-            color: #2d3748;
+            color: #000;
         }
         
-        .export-btn {
-            background: #48bb78;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
+        .action-buttons {
             display: flex;
-            align-items: center;
             gap: 8px;
         }
         
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .export-btn {
+            background: #34C759;
+            color: white;
+        }
+        
         .export-btn:active {
-            background: #38a169;
+            background: #2B9A48;
         }
         
         .clear-btn {
-            background: #fc8181;
+            background: #FF3B30;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
         }
         
         .clear-btn:active {
-            background: #f56565;
+            background: #D70015;
         }
         
         .orders-list {
             list-style: none;
-            max-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            margin-top: 10px;
         }
         
         .order-item {
-            background: white;
-            border-radius: 16px;
+            background: #FFFFFF;
+            border-radius: 14px;
             padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #667eea;
-            transition: transform 0.2s ease;
-            animation: slideIn 0.3s ease;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            border: 1px solid #E5E5EA;
             position: relative;
+            animation: slideIn 0.2s ease;
         }
         
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -280,27 +302,27 @@
             }
         }
         
-        .order-item-header {
+        .order-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             padding-right: 30px;
         }
         
         .order-name {
-            font-weight: 700;
-            font-size: 18px;
-            color: #2d3748;
+            font-weight: 600;
+            font-size: 17px;
+            color: #000;
         }
         
         .order-department {
-            background: #e9d8fd;
-            color: #553c9a;
+            background: #F2F2F7;
+            color: #8E8E93;
             padding: 4px 10px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
         }
         
         .flavors-list {
@@ -310,79 +332,84 @@
         .flavor-tag {
             display: inline-flex;
             align-items: center;
-            background: #f7fafc;
-            border-radius: 30px;
-            padding: 6px 12px;
-            margin: 0 8px 8px 0;
+            background: #F2F2F7;
+            border-radius: 20px;
+            padding: 6px 14px;
+            margin: 0 6px 6px 0;
             font-size: 14px;
+            color: #000;
         }
         
         .flavor-tag.queso {
-            background: #fef3c7;
-            color: #92400e;
+            background: #FFE5B4;
+            color: #8B4513;
         }
         
         .flavor-tag.zarzamora {
-            background: #fed7d7;
-            color: #9b2c2c;
+            background: #FFD7D7;
+            color: #8B1E1E;
         }
         
         .order-total {
-            font-weight: 700;
-            color: #2d3748;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed #e2e8f0;
+            font-weight: 600;
+            color: #007AFF;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #E5E5EA;
         }
         
         .delete-item {
             background: none;
             border: none;
-            color: #fc8181;
-            font-size: 20px;
+            color: #FF3B30;
+            font-size: 22px;
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 8px;
-            transition: background 0.3s ease;
             position: absolute;
-            top: 16px;
-            right: 16px;
+            top: 12px;
+            right: 12px;
         }
         
         .delete-item:active {
-            background: #fff5f5;
+            background: rgba(255, 59, 48, 0.1);
         }
         
         .empty-list {
             text-align: center;
-            color: #a0aec0;
-            padding: 32px 16px;
-            font-style: italic;
+            color: #8E8E93;
+            padding: 40px 20px;
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px dashed #C6C6C8;
+            font-size: 16px;
         }
         
         .stats {
             display: flex;
             justify-content: space-between;
             margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #e2e8f0;
-            color: #4a5568;
+            padding: 16px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #E5E5EA;
+            color: #000;
             font-weight: 500;
         }
         
+        .stats span {
+            color: #8E8E93;
+        }
+        
+        .stats span span {
+            color: #000;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+        
         @media (max-width: 400px) {
-            .container {
-                padding: 16px;
-            }
-            
-            .list-header {
+            .action-buttons {
                 flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .export-btn, .clear-btn {
-                width: 100%;
-                justify-content: center;
             }
             
             .flavor-row {
@@ -395,60 +422,64 @@
             
             .remove-flavor {
                 width: 100%;
-                border-radius: 12px;
+                border-radius: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- TODO EL CUERPO ES IGUAL - no necesitas cambiarlo -->
+    <div class="status-bar"></div>
+    
     <div class="container">
-        <h1>🥧 Control de Pays Multi-sabor</h1>
-        <p class="subtitle">Registra pedidos combinados por persona</p>
+        <div class="app-header">
+            <h1>Pays Control</h1>
+            <div class="subtitle">Registra pedidos por persona</div>
+        </div>
         
         <form id="orderForm">
-            <div class="form-group">
-                <label for="nombre">👤 Nombre del solicitante</label>
-                <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required autocomplete="off">
-            </div>
-            
-            <div class="form-group">
-                <label for="departamento">🏢 Departamento</label>
-                <select id="departamento" class="department-select" required>
-                    <option value="" disabled selected>Selecciona un departamento</option>
-                    <option value="ALMACEN">Almacén</option>
-                    <option value="IT">IT</option>
-                    <option value="MATERIALES">Materiales</option>
-                    <option value="FA">FA</option>
-                    <option value="PRODUCTO">Producto</option>
-                    <option value="PRUEBAS L10">Pruebas L10</option>
-                    <option value="PRUEBAS L6">Pruebas L6</option>
-                    <option value="PROCESOS">Procesos</option>
-                    <option value="NPI">NPI</option>
-                    <option value="OTRO">Otro</option>
-                </select>
-            </div>
-            
-            <div class="multi-flavor-section">
-                <label>🍰 Sabores y cantidades</label>
-                <div id="flavors-container">
-                    <!-- Las filas de sabores se agregarán aquí dinámicamente -->
+            <div class="form-card">
+                <div class="form-group">
+                    <label>👤 NOMBRE</label>
+                    <input type="text" id="nombre" placeholder="Nombre del solicitante" required autocomplete="off">
                 </div>
-                <button type="button" id="addFlavorBtn" class="add-flavor-btn">+ Agregar otro sabor</button>
-                <div id="totalDisplay" class="total-quantity">
-                    Total de pays: 0
+                
+                <div class="form-group">
+                    <label>🏢 DEPARTAMENTO</label>
+                    <select id="departamento" class="department-select" required>
+                        <option value="" disabled selected>Selecciona departamento</option>
+                        <option value="ALMACEN">Almacén</option>
+                        <option value="IT">IT</option>
+                        <option value="MATERIALES">Materiales</option>
+                        <option value="FA">FA</option>
+                        <option value="PRODUCTO">Producto</option>
+                        <option value="PRUEBAS L10">Pruebas L10</option>
+                        <option value="PRUEBAS L6">Pruebas L6</option>
+                        <option value="PROCESOS">Procesos</option>
+                        <option value="NPI">NPI</option>
+                        <option value="OTRO">Otro</option>
+                    </select>
                 </div>
+                
+                <div class="flavors-section">
+                    <label>SABORES Y CANTIDADES</label>
+                    <div id="flavors-container"></div>
+                    <button type="button" id="addFlavorBtn" class="add-flavor-btn">+ Agregar otro sabor</button>
+                </div>
+                
+                <div id="totalDisplay" class="total-display">
+                    Total: 0 pays
+                </div>
+                
+                <button type="submit" class="add-btn">Agregar pedido</button>
             </div>
-            
-            <button type="submit" class="add-btn">📦 Agregar pedido completo</button>
         </form>
         
         <div class="list-section">
             <div class="list-header">
-                <span class="list-title">📋 Pedidos registrados</span>
-                <div style="display: flex; gap: 8px;">
-                    <button id="clearAllBtn" class="clear-btn">🗑️ Limpiar</button>
-                    <button id="exportBtn" class="export-btn">📤 Exportar</button>
+                <span class="list-title">Pedidos</span>
+                <div class="action-buttons">
+                    <button id="clearAllBtn" class="action-btn clear-btn">Limpiar</button>
+                    <button id="exportBtn" class="action-btn export-btn">Exportar</button>
                 </div>
             </div>
             
@@ -456,36 +487,34 @@
                 <li class="empty-list">No hay pedidos registrados</li>
             </ul>
             
-            <div class="stats" id="stats">
-                <span>Total de pays: <span id="totalPays">0</span></span>
-                <span>Pedidos: <span id="totalOrders">0</span></span>
+            <div class="stats">
+                <span>Total pays <span id="totalPays">0</span></span>
+                <span>Pedidos <span id="totalOrders">0</span></span>
             </div>
         </div>
     </div>
     
     <script>
-        // TODO EL SCRIPT ES IGUAL - no necesitas cambiarlo
         class OrderManager {
             constructor() {
                 this.orders = this.loadOrders();
                 this.flavorCount = 1;
                 this.initEventListeners();
                 this.renderOrders();
-                this.addFlavorRow(); // Agregar primera fila de sabor
+                this.addFlavorRow();
             }
             
             loadOrders() {
                 try {
-                    const saved = localStorage.getItem('pieOrdersMulti');
+                    const saved = localStorage.getItem('pieOrdersNative');
                     return saved ? JSON.parse(saved) : [];
                 } catch (e) {
-                    console.error('Error loading orders:', e);
                     return [];
                 }
             }
             
             saveOrders() {
-                localStorage.setItem('pieOrdersMulti', JSON.stringify(this.orders));
+                localStorage.setItem('pieOrdersNative', JSON.stringify(this.orders));
                 this.updateStats();
             }
             
@@ -513,7 +542,6 @@
                 this.flavorCount++;
                 this.updateTotalDisplay();
                 
-                // Agregar event listeners para actualizar total
                 const select = row.querySelector('.flavor-select');
                 const input = row.querySelector('.flavor-quantity-input');
                 select.addEventListener('change', () => this.updateTotalDisplay());
@@ -533,29 +561,22 @@
             updateTotalDisplay() {
                 const rows = document.querySelectorAll('.flavor-row');
                 let total = 0;
-                
                 rows.forEach(row => {
                     const input = row.querySelector('.flavor-quantity-input');
                     total += parseInt(input.value) || 0;
                 });
-                
-                document.getElementById('totalDisplay').textContent = `Total de pays: ${total}`;
+                document.getElementById('totalDisplay').textContent = `Total: ${total} pays`;
             }
             
             getFlavorsFromForm() {
                 const rows = document.querySelectorAll('.flavor-row');
                 const flavors = [];
-                
                 rows.forEach(row => {
-                    const select = row.querySelector('.flavor-select');
-                    const input = row.querySelector('.flavor-quantity-input');
-                    
                     flavors.push({
-                        tipo: select.value,
-                        cantidad: parseInt(input.value) || 1
+                        tipo: row.querySelector('.flavor-select').value,
+                        cantidad: parseInt(row.querySelector('.flavor-quantity-input').value) || 1
                     });
                 });
-                
                 return flavors;
             }
             
@@ -567,40 +588,26 @@
                 const flavors = this.getFlavorsFromForm();
                 
                 if (!nombre || !departamento) {
-                    alert('Por favor, completa el nombre y departamento');
+                    alert('Completa todos los campos');
                     return;
                 }
                 
-                const totalCantidad = flavors.reduce((sum, f) => sum + f.cantidad, 0);
+                const total = flavors.reduce((sum, f) => sum + f.cantidad, 0);
                 
-                if (totalCantidad === 0) {
-                    alert('Debes agregar al menos 1 pay');
+                if (total === 0) {
+                    alert('Agrega al menos 1 pay');
                     return;
                 }
                 
-                this.orders.push({
-                    nombre,
-                    departamento,
-                    flavors,
-                    total: totalCantidad,
-                    fecha: new Date().toISOString()
-                });
-                
+                this.orders.push({ nombre, departamento, flavors, total });
                 this.saveOrders();
                 this.renderOrders();
                 
-                // Resetear formulario
                 document.getElementById('nombre').value = '';
                 document.getElementById('departamento').value = '';
-                
-                // Limpiar sabores y dejar solo uno
-                const container = document.getElementById('flavors-container');
-                container.innerHTML = '';
+                document.getElementById('flavors-container').innerHTML = '';
                 this.flavorCount = 1;
                 this.addFlavorRow();
-                
-                // Scroll al inicio de la lista
-                document.querySelector('.list-section').scrollIntoView({ behavior: 'smooth' });
             }
             
             deleteOrder(index) {
@@ -610,9 +617,7 @@
             }
             
             clearAllOrders() {
-                if (this.orders.length === 0) return;
-                
-                if (confirm('¿Estás seguro de eliminar todos los pedidos?')) {
+                if (this.orders.length && confirm('¿Eliminar todos los pedidos?')) {
                     this.orders = [];
                     this.saveOrders();
                     this.renderOrders();
@@ -620,7 +625,7 @@
             }
             
             updateStats() {
-                const totalPays = this.orders.reduce((sum, order) => sum + order.total, 0);
+                const totalPays = this.orders.reduce((sum, o) => sum + o.total, 0);
                 document.getElementById('totalPays').textContent = totalPays;
                 document.getElementById('totalOrders').textContent = this.orders.length;
             }
@@ -634,44 +639,27 @@
                     return;
                 }
                 
-                let html = '';
-                this.orders.forEach((order, index) => {
-                    // Crear etiquetas de sabores
-                    let flavorsHtml = '<div class="flavors-list">';
-                    order.flavors.forEach(flavor => {
-                        const icon = flavor.tipo === 'queso' ? '🧀' : '🍇';
-                        const tipoTexto = flavor.tipo === 'queso' ? 'Queso' : 'Zarzamora';
-                        flavorsHtml += `
-                            <span class="flavor-tag ${flavor.tipo}">
-                                ${icon} ${tipoTexto}: ${flavor.cantidad}
-                            </span>
-                        `;
-                    });
-                    flavorsHtml += '</div>';
-                    
-                    html += `
-                        <li class="order-item" data-index="${index}">
-                            <div class="order-item-header">
-                                <span class="order-name">${this.escapeHtml(order.nombre)}</span>
-                                <span class="order-department">${order.departamento}</span>
-                            </div>
-                            ${flavorsHtml}
-                            <div class="order-total">
-                                Total: ${order.total} ${order.total === 1 ? 'pay' : 'pays'}
-                            </div>
-                            <button class="delete-item" onclick="orderManager.deleteOrder(${index})">✕</button>
-                        </li>
-                    `;
-                });
+                list.innerHTML = this.orders.map((order, index) => `
+                    <li class="order-item">
+                        <div class="order-header">
+                            <span class="order-name">${order.nombre}</span>
+                            <span class="order-department">${order.departamento}</span>
+                        </div>
+                        <div class="flavors-list">
+                            ${order.flavors.map(f => `
+                                <span class="flavor-tag ${f.tipo}">
+                                    ${f.tipo === 'queso' ? '🧀' : '🍇'} ${f.tipo === 'queso' ? 'Queso' : 'Zarzamora'}: ${f.cantidad}
+                                </span>
+                            `).join('')}
+                        </div>
+                        <div class="order-total">
+                            Total: ${order.total} ${order.total === 1 ? 'pay' : 'pays'}
+                        </div>
+                        <button class="delete-item" onclick="orderManager.deleteOrder(${index})">✕</button>
+                    </li>
+                `).join('');
                 
-                list.innerHTML = html;
                 this.updateStats();
-            }
-            
-            escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
             }
             
             exportOrders() {
@@ -680,59 +668,33 @@
                     return;
                 }
                 
-                // Crear CSV detallado
-                const rows = [];
-                
-                // Encabezados
-                rows.push(['Nombre', 'Departamento', 'Sabores (Tipo:Cantidad)', 'Total Pays', 'Fecha'].join(','));
+                const rows = [['Nombre', 'Departamento', 'Sabores', 'Total Pays']];
                 
                 this.orders.forEach(order => {
-                    const saboresStr = order.flavors.map(f => 
+                    const sabores = order.flavors.map(f => 
                         `${f.tipo === 'queso' ? 'Queso' : 'Zarzamora'}:${f.cantidad}`
                     ).join(' | ');
                     
-                    const fecha = new Date(order.fecha).toLocaleDateString('es-MX');
-                    
-                    rows.push([
-                        `"${order.nombre}"`,
-                        `"${order.departamento}"`,
-                        `"${saboresStr}"`,
-                        order.total,
-                        `"${fecha}"`
-                    ].join(','));
+                    rows.push([order.nombre, order.departamento, sabores, order.total]);
                 });
                 
-                const csvString = rows.join('\n');
-                const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' }); // \uFEFF para UTF-8 con BOM
+                const csv = rows.map(r => r.join(',')).join('\n');
+                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', `pedidos_pays_${new Date().toISOString().split('T')[0]}.csv`);
-                document.body.appendChild(link);
+                link.download = `pays_${new Date().toISOString().slice(0,10)}.csv`;
                 link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
             }
             
             initEventListeners() {
                 document.getElementById('orderForm').addEventListener('submit', (e) => this.addOrder(e));
                 document.getElementById('exportBtn').addEventListener('click', () => this.exportOrders());
                 document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllOrders());
-                
-                document.getElementById('addFlavorBtn').addEventListener('click', () => {
-                    this.addFlavorRow();
-                });
-                
-                // Prevenir zoom en inputs en iOS
-                document.querySelectorAll('input, select').forEach(element => {
-                    element.addEventListener('touchstart', (e) => {
-                        e.stopPropagation();
-                    });
-                });
+                document.getElementById('addFlavorBtn').addEventListener('click', () => this.addFlavorRow());
             }
         }
         
-        // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', () => {
             window.orderManager = new OrderManager();
         });
