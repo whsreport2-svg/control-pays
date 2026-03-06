@@ -957,6 +957,73 @@
     .sh-btn.cancel { background: var(--bg); color: var(--text-2); }
     .sh-btn.ok     { background: var(--accent); color: #fff; box-shadow: 0 4px 16px rgba(212,130,156,0.4); }
 
+    /* json sync card */
+    .sync-card {
+      margin: 0 16px 12px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .sync-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .sync-header:active { background: var(--bg); }
+    .sync-header-left {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sync-header-title {
+      font-size: 14px; font-weight: 800;
+      color: var(--text-1);
+    }
+    .sync-header-sub {
+      font-size: 11px; font-weight: 600;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+    .sync-chevron {
+      font-size: 12px; color: var(--text-3);
+      transition: transform 0.25s ease;
+    }
+    .sync-chevron.open { transform: rotate(180deg); }
+    .sync-body {
+      display: none;
+      border-top: 1.5px solid var(--border);
+      padding: 16px;
+      background: #FDFAFB;
+    }
+    .sync-body.open { display: block; }
+    .sync-btns {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .sync-btn {
+      padding: 14px 10px;
+      border-radius: var(--r-sm);
+      border: 2px solid var(--border);
+      background: var(--surface);
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px; font-weight: 800;
+      color: var(--text-2); cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+    .sync-btn:active { transform: scale(0.96); }
+    .sync-btn-icon { font-size: 22px; }
+    .sync-btn.export-json { color: #5BAD80; border-color: #B8E8CC; background: #F6FFFA; }
+    .sync-btn.import-json { color: #6B80D4; border-color: #B4C0E8; background: #F5F7FF; }
+    .sync-hint {
+      font-size: 12px; font-weight: 600;
+      color: var(--text-3); text-align: center;
+      margin-top: 12px; line-height: 1.5;
+    }
+
     /* storage warn */
     .storage-warn {
       margin: 0 16px 12px;
@@ -1097,9 +1164,40 @@
       </div>
 
       <div class="orders-actions">
-        <button class="chip-btn go"     id="btnExport">📤 Exportar</button>
+        <button class="chip-btn go"     id="btnExport">📤 Exportar CSV</button>
         <button class="chip-btn danger" id="btnClear">🗑 Limpiar todo</button>
       </div>
+
+      <!-- SYNC JSON -->
+      <div class="sync-card">
+        <div class="sync-header" id="syncToggle">
+          <div class="sync-header-left">
+            <span style="font-size:20px">🔄</span>
+            <div>
+              <div class="sync-header-title">Compartir entre dispositivos</div>
+              <div class="sync-header-sub">Exporta e importa el respaldo JSON</div>
+            </div>
+          </div>
+          <span class="sync-chevron" id="syncChevron">▼</span>
+        </div>
+        <div class="sync-body" id="syncBody">
+          <div class="sync-btns">
+            <button class="sync-btn export-json" id="btnExportJson">
+              <span class="sync-btn-icon">⬇️</span>
+              Guardar JSON
+            </button>
+            <button class="sync-btn import-json" id="btnImportJson">
+              <span class="sync-btn-icon">⬆️</span>
+              Cargar JSON
+            </button>
+          </div>
+          <div class="sync-hint">
+            📱 Guarda el JSON en un dispositivo → compártelo por WhatsApp, Drive o AirDrop → cárgalo en el otro
+          </div>
+        </div>
+      </div>
+      <!-- input oculto para importar -->
+      <input type="file" id="jsonFileInput" accept=".json,application/json" style="display:none">
 
       <div class="filter-row">
         <button class="filter-chip active" data-filter="all">Todos 🥧</button>
@@ -1679,8 +1777,147 @@ document.getElementById('btnClear').addEventListener('click', async () => {
 });
 
 /* ══════════════════════
-   EXPORT CSV — con columnas separadas por sabor
+   SYNC TOGGLE
 ══════════════════════ */
+document.getElementById('syncToggle').addEventListener('click', () => {
+  const body    = document.getElementById('syncBody');
+  const chevron = document.getElementById('syncChevron');
+  const open    = body.classList.toggle('open');
+  chevron.classList.toggle('open', open);
+});
+
+/* ══════════════════════
+   EXPORT JSON
+══════════════════════ */
+document.getElementById('btnExportJson').addEventListener('click', () => {
+  if(!orders.length){ toast('¡No hay pedidos para guardar! 📋','warning'); return; }
+  try {
+    const payload = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      exportedBy: 'Pays · Emily Zuno',
+      orders: orders
+    };
+    const json = JSON.stringify(payload, null, 2);
+    const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `pays_backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    toast(`✅ JSON guardado — ${orders.length} pedido${orders.length!==1?'s':''}`, 'success');
+  } catch(e) {
+    toast('❌ Error al exportar JSON','error');
+  }
+});
+
+/* ══════════════════════
+   IMPORT JSON
+══════════════════════ */
+document.getElementById('btnImportJson').addEventListener('click', () => {
+  document.getElementById('jsonFileInput').click();
+});
+
+document.getElementById('jsonFileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  e.target.value = ''; // reset para poder importar el mismo archivo de nuevo
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+
+    // Validar estructura
+    let incoming = [];
+    if(Array.isArray(parsed)) {
+      // Si alguien exportó solo el array directamente
+      incoming = parsed;
+    } else if(parsed.orders && Array.isArray(parsed.orders)) {
+      incoming = parsed.orders;
+    } else {
+      toast('❌ El archivo no tiene el formato correcto','error'); return;
+    }
+
+    // Validar que cada pedido tenga campos mínimos
+    const valid = incoming.every(o =>
+      typeof o.nombre === 'string' &&
+      typeof o.depto  === 'string' &&
+      Array.isArray(o.flavors) &&
+      typeof o.total  === 'number'
+    );
+    if(!valid) { toast('❌ Algunos pedidos tienen datos inválidos','error'); return; }
+
+    if(incoming.length === 0) { toast('⚠️ El archivo no tiene pedidos','warning'); return; }
+
+    // Preguntar si reemplazar o combinar
+    const existingCount = orders.length;
+    let action = 'replace';
+    if(existingCount > 0) {
+      action = await choiceSheet(
+        '📂',
+        `Importar ${incoming.length} pedido${incoming.length!==1?'s':''}`,
+        `Ya tienes ${existingCount} pedido${existingCount!==1?'s':''} guardado${existingCount!==1?'s':''}.`,
+        '🔀 Combinar', '♻️ Reemplazar todo'
+      );
+      if(action === null) return; // canceló
+    }
+
+    if(action === 'replace' || existingCount === 0) {
+      orders = incoming;
+    } else {
+      // Combinar evitando duplicados por timestamp
+      const existingTs = new Set(orders.map(o => o.ts));
+      const newOnes = incoming.filter(o => !existingTs.has(o.ts));
+      orders = [...orders, ...newOnes];
+      const dupes = incoming.length - newOnes.length;
+      if(dupes > 0) toast(`ℹ️ ${dupes} duplicado${dupes!==1?'s':''} ignorado${dupes!==1?'s':''}`, 'info', 3000);
+    }
+
+    save();
+    renderOrders();
+    renderResumen();
+    toast(`🎉 ¡${incoming.length} pedido${incoming.length!==1?'s':''} importado${incoming.length!==1?'s':''}!`, 'success');
+
+  } catch(err) {
+    toast('❌ El archivo JSON está dañado o es inválido','error');
+  }
+});
+
+/* ══════════════════════
+   CHOICE SHEET (2 opciones)
+══════════════════════ */
+function choiceSheet(emoji, title, body, labelA, labelB) {
+  return new Promise(res => {
+    const ov = document.getElementById('overlay');
+    document.getElementById('sheetEmoji').textContent = emoji;
+    document.getElementById('sheetTitle').textContent = title;
+    document.getElementById('sheetBody').textContent  = body;
+    // Reusar botones — cancelar = null, ok = labelB (reemplazar), extra = labelA (combinar)
+    const okBtn     = document.getElementById('sheetOk');
+    const cancelBtn = document.getElementById('sheetCancel');
+    okBtn.textContent     = labelB;
+    cancelBtn.textContent = labelA;
+    cancelBtn.style.background = '#E8F5FF';
+    cancelBtn.style.color = '#3A68A8';
+    ov.classList.add('show');
+    const onOk  = () => { cleanup(); res('replace'); };
+    const onCan = () => { cleanup(); res('merge'); };
+    const onBg  = (e) => { if(e.target===ov){ cleanup(); res(null); } };
+    function cleanup() {
+      ov.classList.remove('show');
+      okBtn.removeEventListener('click', onOk);
+      cancelBtn.removeEventListener('click', onCan);
+      ov.removeEventListener('click', onBg);
+      cancelBtn.style.background = '';
+      cancelBtn.style.color = '';
+      cancelBtn.textContent = 'Mejor no';
+    }
+    okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCan);
+    ov.addEventListener('click', onBg);
+  });
+}
 document.getElementById('btnExport').addEventListener('click', () => {
   if(!orders.length){ toast('¡No hay pedidos para exportar! 📋','warning'); return; }
   try {
