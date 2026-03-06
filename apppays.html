@@ -9,6 +9,8 @@
   <title>Pays · Emily Zuno 🥧</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Pacifico&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     :root {
       --bg:        #FEF6FA;
@@ -16,6 +18,7 @@
       --border:    #F2E4EF;
       --accent:    #D4829C;
       --accent-lt: #FAE8F0;
+      --accent-dk: #B5607A;
       --mint:      #88C9A1;
       --mint-lt:   #E4F6EB;
       --gold:      #E8A84A;
@@ -33,6 +36,9 @@
       --safe-b:    env(safe-area-inset-bottom, 0px);
       --r:         22px;
       --r-sm:      14px;
+      --shadow-sm: 0 2px 8px rgba(58,40,64,0.07);
+      --shadow-md: 0 6px 20px rgba(58,40,64,0.10);
+      --shadow-lg: 0 12px 36px rgba(58,40,64,0.13);
     }
 
     *, *::before, *::after {
@@ -57,9 +63,9 @@
     /* ── TOP BAR ── */
     .top-bar {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(254,246,250,0.9);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(254,246,250,0.92);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border-bottom: 1.5px solid var(--border);
       padding: env(safe-area-inset-top, 0px) 20px 0;
       display: flex; align-items: center; justify-content: space-between;
@@ -86,12 +92,13 @@
     .header-right { display: flex; align-items: center; gap: 8px; }
 
     .badge {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-dk));
       color: #fff;
       font-size: 12px;
       font-weight: 800;
       padding: 5px 12px;
       border-radius: 30px;
+      box-shadow: 0 3px 10px rgba(212,130,156,0.35);
     }
 
     /* ── SCROLL ── */
@@ -140,8 +147,16 @@
       display: flex;
       align-items: center;
       gap: 14px;
+      box-shadow: var(--shadow-md);
     }
-    .welcome-emoji { font-size: 36px; flex-shrink: 0; }
+    .welcome-emoji { font-size: 36px; flex-shrink: 0; animation: wave 2.5s ease-in-out infinite; }
+    @keyframes wave {
+      0%,100% { transform: rotate(0deg); }
+      20% { transform: rotate(-15deg); }
+      40% { transform: rotate(12deg); }
+      60% { transform: rotate(-8deg); }
+      80% { transform: rotate(5deg); }
+    }
     .welcome-text h3 {
       font-size: 16px;
       font-weight: 800;
@@ -162,6 +177,7 @@
       border: 1.5px solid var(--border);
       margin: 0 16px 12px;
       overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
 
     .field-row {
@@ -256,7 +272,9 @@
       color: var(--text-1);
       background: var(--bg);
       -webkit-appearance: none; outline: none; cursor: pointer;
+      transition: border-color 0.2s;
     }
+    .fl-select-wrap select:focus { border-color: var(--accent); }
 
     .qty-ctrl {
       display: flex; align-items: center;
@@ -264,7 +282,9 @@
       border-radius: var(--r-sm);
       overflow: hidden; flex-shrink: 0;
       background: var(--surface);
+      transition: border-color 0.2s;
     }
+    .qty-ctrl:focus-within { border-color: var(--accent); }
     .qty-btn {
       background: var(--bg); border: none;
       color: var(--accent); font-size: 20px; font-weight: 700;
@@ -310,10 +330,23 @@
     .strip-num {
       font-family: 'Pacifico', cursive;
       font-size: 38px; color: #fff; line-height: 1;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
     }
+    .strip-num.bump { transform: scale(1.2); }
     .strip-unit {
       font-size: 13px; font-weight: 700;
       color: rgba(255,255,255,0.65); margin-top: 3px;
+    }
+    /* precio estimado */
+    .strip-price {
+      font-size: 11px; font-weight: 800;
+      color: rgba(255,255,255,0.85);
+      margin-top: 4px;
+      background: rgba(255,255,255,0.18);
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
     }
 
     .strip-pills { display: flex; flex-direction: column; gap: 7px; align-items: flex-end; }
@@ -330,7 +363,7 @@
       width: calc(100% - 32px);
       margin: 0 16px 16px;
       padding: 20px;
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-dk));
       color: #fff; border: none;
       border-radius: var(--r);
       font-family: 'Nunito', sans-serif;
@@ -344,6 +377,44 @@
     /* ════════════════════════
        PAGE 2: PEDIDOS
     ════════════════════════ */
+
+    /* SEARCH BAR */
+    .search-bar-wrap {
+      padding: 0 16px 12px;
+    }
+    .search-bar {
+      display: flex; align-items: center;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 0 14px;
+      gap: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .search-bar:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212,130,156,0.12);
+    }
+    .search-icon { font-size: 16px; color: var(--text-3); flex-shrink: 0; }
+    .search-input {
+      flex: 1; border: none; background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px; font-weight: 700;
+      color: var(--text-1); outline: none;
+      padding: 13px 0;
+    }
+    .search-input::placeholder { color: var(--text-3); font-weight: 600; }
+    .search-clear {
+      background: none; border: none;
+      color: var(--text-3); font-size: 16px;
+      cursor: pointer; padding: 4px;
+      border-radius: 8px; transition: all 0.15s;
+      display: none;
+    }
+    .search-clear.visible { display: block; }
+    .search-clear:active { color: var(--accent); background: var(--accent-lt); }
+
     .orders-actions {
       display: flex; gap: 8px;
       padding: 0 16px 12px;
@@ -359,6 +430,7 @@
       color: var(--text-2); cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 6px;
       transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
     }
     .chip-btn:active { transform: scale(0.96); background: var(--bg); }
     .chip-btn.danger { color: #D4829C; border-color: #F5D0DE; }
@@ -392,6 +464,14 @@
       color: #fff;
     }
 
+    /* search result highlight */
+    .highlight {
+      background: linear-gradient(120deg, #FAE8F0 0%, #FAE8F0 100%);
+      border-radius: 3px;
+      color: var(--accent-dk);
+      font-weight: 900;
+    }
+
     /* order list */
     .orders-list {
       list-style: none;
@@ -405,8 +485,10 @@
       border-radius: var(--r);
       overflow: hidden;
       animation: slideDown 0.25s ease;
-      transition: opacity 0.3s, transform 0.3s;
+      transition: opacity 0.3s, transform 0.3s, box-shadow 0.2s;
+      box-shadow: var(--shadow-sm);
     }
+    .order-card:hover { box-shadow: var(--shadow-md); }
 
     .order-card.delivered {
       border-color: #C2E8D0;
@@ -524,6 +606,13 @@
       font-size: 18px; color: var(--accent);
       margin-right: 2px;
     }
+    .card-price-tag {
+      font-size: 12px; font-weight: 800;
+      color: #5BAD80;
+      background: var(--mint-lt);
+      padding: 4px 10px; border-radius: 20px;
+      border: 1.5px solid #C2E8D0;
+    }
 
     .del-btn {
       background: none; border: none;
@@ -556,10 +645,14 @@
       border: 1.5px solid var(--border);
       border-radius: var(--r);
       padding: 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
+    .stat-card:active { transform: scale(0.97); }
     .stat-card.wide { grid-column: 1 / -1; }
     .stat-card.mint-card  { border-color: #C2E8D0; background: #F6FFFA; }
     .stat-card.gold-card  { border-color: #F0D8A8; background: #FFFAF0; }
+    .stat-card.pink-card  { border-color: #F2CADA; background: #FFF5F8; }
 
     .stat-icon { font-size: 26px; margin-bottom: 8px; }
     .stat-val {
@@ -569,10 +662,67 @@
     }
     .stat-card.mint-card .stat-val { color: #4A9A6A; }
     .stat-card.gold-card .stat-val { color: #B8780A; }
+    .stat-card.pink-card .stat-val { color: var(--accent); }
     .stat-lbl {
       font-size: 12px; font-weight: 800;
       text-transform: uppercase; letter-spacing: 0.8px;
       color: var(--text-3);
+    }
+    .stat-sub {
+      font-size: 11px; font-weight: 700;
+      color: var(--text-3); margin-top: 3px;
+    }
+
+    /* recaudación card */
+    .revenue-card {
+      margin: 0 16px 12px;
+      background: linear-gradient(135deg, #3A2840 0%, #5A3858 60%, #7A4870 100%);
+      border-radius: var(--r);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-lg);
+      color: #fff;
+    }
+    .rev-label {
+      font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 6px;
+    }
+    .rev-amount {
+      font-family: 'Pacifico', cursive;
+      font-size: 40px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .rev-amount span { color: rgba(255,255,255,0.5); font-size: 24px; }
+    .rev-sub {
+      font-size: 12px; font-weight: 700;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 16px;
+    }
+    .rev-breakdown {
+      display: flex; gap: 10px;
+    }
+    .rev-chip {
+      flex: 1; padding: 10px 12px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .rev-chip-lbl {
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 4px;
+    }
+    .rev-chip-val {
+      font-family: 'Pacifico', cursive;
+      font-size: 22px;
+      color: #fff;
+    }
+    .rev-chip-unit {
+      font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.5);
     }
 
     /* flavor bars */
@@ -582,6 +732,7 @@
       border-radius: var(--r);
       margin: 0 16px 12px;
       padding: 18px;
+      box-shadow: var(--shadow-sm);
     }
 
     .fl-bar-row {
@@ -592,15 +743,15 @@
 
     .fl-bar-lbl {
       font-size: 14px; font-weight: 800;
-      color: var(--text-1); width: 100px; flex-shrink: 0;
+      color: var(--text-1); width: 110px; flex-shrink: 0;
     }
     .bar-track {
       flex: 1; background: var(--bg);
-      border-radius: 30px; height: 10px; overflow: hidden;
+      border-radius: 30px; height: 12px; overflow: hidden;
     }
     .bar-fill {
       height: 100%; border-radius: 30px;
-      transition: width 0.7s cubic-bezier(0.22,1,0.36,1);
+      transition: width 0.8s cubic-bezier(0.22,1,0.36,1);
     }
     .bar-fill.q { background: linear-gradient(90deg, #F2C57C, #E8A84A); }
     .bar-fill.z { background: linear-gradient(90deg, #C4B4E8, #A89BD4); }
@@ -611,6 +762,31 @@
       text-align: right; flex-shrink: 0;
     }
 
+    /* CHARTS */
+    .chart-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r);
+      margin: 0 16px 12px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .chart-title {
+      font-size: 14px; font-weight: 800;
+      color: var(--text-2);
+      text-transform: uppercase; letter-spacing: 0.8px;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .chart-container {
+      position: relative;
+      height: 200px;
+    }
+    .chart-container-lg {
+      position: relative;
+      height: 240px;
+    }
+
     /* dept list */
     .dept-card {
       background: var(--surface);
@@ -618,14 +794,17 @@
       border-radius: var(--r);
       margin: 0 16px 24px;
       overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
     .dept-row {
       display: flex; align-items: center;
       justify-content: space-between;
       padding: 14px 18px;
       border-bottom: 1.5px solid var(--border);
+      transition: background 0.15s;
     }
     .dept-row:last-child { border-bottom: none; }
+    .dept-row:active { background: var(--bg); }
     .dept-name { font-size: 15px; font-weight: 700; color: var(--text-1); }
     .dept-count {
       font-size: 13px; font-weight: 800;
@@ -633,6 +812,11 @@
       background: var(--bg);
       padding: 5px 12px; border-radius: 30px;
       border: 1.5px solid var(--border);
+    }
+    .dept-revenue {
+      font-size: 12px; font-weight: 800;
+      color: #5BAD80;
+      margin-left: auto; margin-right: 8px;
     }
 
     /* pending banner */
@@ -644,6 +828,7 @@
       flex: 1; padding: 12px 14px;
       border-radius: var(--r-sm);
       text-align: center;
+      box-shadow: var(--shadow-sm);
     }
     .pend-chip.delivery { background: var(--mint-lt); border: 1.5px solid #C2E8D0; }
     .pend-chip.payment  { background: var(--gold-lt);  border: 1.5px solid #F0D8A8; }
@@ -668,8 +853,8 @@
       height: calc(var(--tab-h) + var(--safe-b));
       padding-bottom: var(--safe-b);
       background: rgba(254,246,250,0.94);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border-top: 1.5px solid var(--border);
       display: flex; z-index: 200;
     }
@@ -782,6 +967,20 @@
       color: #8A5A20; display: none;
     }
     .storage-warn.show { display: block; }
+
+    /* pulse animation for live data */
+    @keyframes pulse {
+      0%,100% { opacity:1; }
+      50% { opacity:0.6; }
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      background: #5BAD80;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      display: inline-block;
+      margin-right: 4px;
+    }
   </style>
 </head>
 <body>
@@ -869,6 +1068,7 @@
           <div class="strip-lbl">Total del pedido</div>
           <div class="strip-num" id="stripTotal">0</div>
           <div class="strip-unit">pays 🥧</div>
+          <div class="strip-price" id="stripPrice">$0 MXN</div>
         </div>
         <div class="strip-pills">
           <div class="s-pill q">🧀 <span id="stripQueso">0</span> queso</div>
@@ -885,6 +1085,15 @@
       <div class="sec-head">
         <h2>Pedidos</h2>
         <span id="countLabel">Todos</span>
+      </div>
+
+      <!-- BUSCADOR POR NOMBRE -->
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre…" autocomplete="off" autocorrect="off" spellcheck="false">
+          <button class="search-clear" id="searchClear" aria-label="Limpiar búsqueda">✕</button>
+        </div>
       </div>
 
       <div class="orders-actions">
@@ -905,7 +1114,31 @@
 
     <!-- ══ RESUMEN ══ -->
     <div class="page" id="page-resumen">
-      <div class="sec-head"><h2>Resumen</h2></div>
+      <div class="sec-head"><h2>Resumen</h2><span><span class="live-dot"></span>en vivo</span></div>
+
+      <!-- RECAUDACIÓN -->
+      <div class="revenue-card">
+        <div class="rev-label">💵 Recaudación total a $28</div>
+        <div class="rev-amount"><span>$</span><span id="revTotal">0</span></div>
+        <div class="rev-sub" id="revSub">0 pays × $28 MXN</div>
+        <div class="rev-breakdown">
+          <div class="rev-chip">
+            <div class="rev-chip-lbl">Cobrado</div>
+            <div class="rev-chip-val" id="revCobrado">$0</div>
+            <div class="rev-chip-unit">pagados</div>
+          </div>
+          <div class="rev-chip">
+            <div class="rev-chip-lbl">Por cobrar</div>
+            <div class="rev-chip-val" id="revPorCobrar">$0</div>
+            <div class="rev-chip-unit">pendiente</div>
+          </div>
+          <div class="rev-chip">
+            <div class="rev-chip-lbl">Precio</div>
+            <div class="rev-chip-val">$28</div>
+            <div class="rev-chip-unit">c/u MXN</div>
+          </div>
+        </div>
+      </div>
 
       <div class="pending-banner">
         <div class="pend-chip delivery">
@@ -939,8 +1172,15 @@
           <div class="stat-val" id="statPaid">0</div>
           <div class="stat-lbl">Pagados</div>
         </div>
+        <!-- Promedio por pedido -->
+        <div class="stat-card pink-card wide">
+          <div class="stat-icon">📊</div>
+          <div class="stat-val" id="statAvg">0</div>
+          <div class="stat-lbl">Promedio pays por pedido</div>
+        </div>
       </div>
 
+      <!-- GRÁFICA DONA: sabores -->
       <div class="sec-head"><h2>Por sabor</h2></div>
       <div class="flavor-bars">
         <div class="fl-bar-row">
@@ -955,8 +1195,33 @@
         </div>
       </div>
 
+      <div class="chart-card">
+        <div class="chart-title">🍰 Distribución de sabores</div>
+        <div class="chart-container">
+          <canvas id="chartFlavors"></canvas>
+        </div>
+      </div>
+
+      <!-- GRÁFICA BARRAS: departamentos -->
       <div class="sec-head"><h2>Por departamento</h2></div>
+      <div class="chart-card">
+        <div class="chart-title">🏢 Pays por área</div>
+        <div class="chart-container-lg">
+          <canvas id="chartDept"></canvas>
+        </div>
+      </div>
+
       <div class="dept-card" id="deptCard"></div>
+
+      <!-- GRÁFICA: estado de pedidos -->
+      <div class="sec-head"><h2>Estado de pedidos</h2></div>
+      <div class="chart-card" style="margin-bottom: 8px;">
+        <div class="chart-title">📦 Entrega y cobro</div>
+        <div class="chart-container">
+          <canvas id="chartStatus"></canvas>
+        </div>
+      </div>
+
     </div>
 
   </div><!-- /scroll-area -->
@@ -964,7 +1229,7 @@
   <!-- TAB BAR -->
   <nav class="tab-bar">
     <button class="tab active" data-page="nuevo">
-      <div class="tab-icon">✏️</div>
+      <div class="tab-icon">✨</div>
       <span class="tab-lbl">Nuevo</span>
     </button>
     <button class="tab" data-page="pedidos">
@@ -979,6 +1244,8 @@
 </div>
 
 <script>
+const PRICE = 28;
+
 /* ══════════════════════
    TOAST
 ══════════════════════ */
@@ -1064,6 +1331,7 @@ function updateBadge() {
    NAVIGATION
 ══════════════════════ */
 let currentFilter = 'all';
+let searchQuery = '';
 
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -1084,6 +1352,36 @@ document.querySelectorAll('.filter-chip').forEach(chip => {
     renderOrders();
   });
 });
+
+/* ══════════════════════
+   SEARCH
+══════════════════════ */
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+
+searchInput.addEventListener('input', () => {
+  searchQuery = searchInput.value.trim().toLowerCase();
+  searchClear.classList.toggle('visible', searchQuery.length > 0);
+  renderOrders();
+});
+
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchQuery = '';
+  searchClear.classList.remove('visible');
+  searchInput.focus();
+  renderOrders();
+});
+
+function highlightText(text, query) {
+  if(!query) return esc(text);
+  const escaped = esc(text);
+  const idx = escaped.toLowerCase().indexOf(query.toLowerCase());
+  if(idx === -1) return escaped;
+  return escaped.slice(0, idx)
+    + `<span class="highlight">${escaped.slice(idx, idx + query.length)}</span>`
+    + escaped.slice(idx + query.length);
+}
 
 /* ══════════════════════
    FLAVOR ROWS
@@ -1157,9 +1455,20 @@ function updateStrip() {
   const flavors = getFlavorData();
   const total = flavors.reduce((s,f)=>s+f.cantidad, 0);
   const queso = flavors.filter(f=>f.tipo==='queso').reduce((s,f)=>s+f.cantidad, 0);
-  document.getElementById('stripTotal').textContent = total;
+
+  const stripEl = document.getElementById('stripTotal');
+  const prev = parseInt(stripEl.textContent);
+  stripEl.textContent = total;
+  if(total !== prev) {
+    stripEl.classList.remove('bump');
+    void stripEl.offsetWidth;
+    stripEl.classList.add('bump');
+    setTimeout(()=>stripEl.classList.remove('bump'), 200);
+  }
+
   document.getElementById('stripQueso').textContent = queso;
   document.getElementById('stripZarza').textContent = total - queso;
+  document.getElementById('stripPrice').textContent = `$${total * PRICE} MXN`;
 }
 
 document.getElementById('btnAddFlavor').addEventListener('click', () => addFlavorRow());
@@ -1224,23 +1533,35 @@ document.getElementById('btnSubmit').addEventListener('click', () => {
    RENDER ORDERS
 ══════════════════════ */
 function filteredOrders() {
+  let result = orders;
+  // Filtro de estado
   switch(currentFilter) {
-    case 'pending':   return orders.filter(o => !o.delivered || !o.paid);
-    case 'delivered': return orders.filter(o => o.delivered);
-    case 'paid':      return orders.filter(o => o.paid);
-    case 'done':      return orders.filter(o => o.delivered && o.paid);
-    default:          return orders;
+    case 'pending':   result = result.filter(o => !o.delivered || !o.paid); break;
+    case 'delivered': result = result.filter(o => o.delivered); break;
+    case 'paid':      result = result.filter(o => o.paid); break;
+    case 'done':      result = result.filter(o => o.delivered && o.paid); break;
   }
+  // Filtro de búsqueda por nombre
+  if(searchQuery) {
+    result = result.filter(o => o.nombre.toLowerCase().includes(searchQuery));
+  }
+  return result;
 }
 
 function renderOrders() {
   const list   = document.getElementById('ordersList');
   const subset = filteredOrders();
+  const searching = searchQuery.length > 0;
 
-  document.getElementById('countLabel').textContent =
-    subset.length === orders.length
+  let labelText;
+  if(searching) {
+    labelText = subset.length === 0 ? 'Sin resultados' : `${subset.length} resultado${subset.length!==1?'s':''}`;
+  } else {
+    labelText = subset.length === orders.length
       ? `${orders.length} total`
       : `${subset.length} de ${orders.length}`;
+  }
+  document.getElementById('countLabel').textContent = labelText;
 
   if(orders.length === 0) {
     list.innerHTML = `
@@ -1255,14 +1576,13 @@ function renderOrders() {
   if(subset.length === 0) {
     list.innerHTML = `
       <li><div class="empty-state">
-        <div class="empty-emoji">🔍</div>
-        <div class="empty-title">Nada aquí</div>
-        <div class="empty-sub">No hay pedidos en este filtro todavía</div>
+        <div class="empty-emoji">${searching ? '🔍' : '📭'}</div>
+        <div class="empty-title">${searching ? `Sin resultados para "${esc(searchQuery)}"` : 'Nada aquí'}</div>
+        <div class="empty-sub">${searching ? 'Prueba con otro nombre' : 'No hay pedidos en este filtro todavía'}</div>
       </div></li>`;
     updateBadge(); return;
   }
 
-  // Map subset indices back to original indices
   list.innerHTML = subset.map(o => {
     const i = orders.indexOf(o);
     const dClass = o.delivered ? 'delivered-toggle on' : 'delivered-toggle';
@@ -1273,13 +1593,15 @@ function renderOrders() {
       o.paid      ? 'paid'      : ''
     ].join(' ').trim();
 
+    const priceMXN = `$${o.total * PRICE}`;
+
     return `
     <li>
       <div class="${cardClass}" id="card-${i}">
         <div class="card-top">
           <div class="card-name-wrap">
             <div class="card-name">
-              ${esc(o.nombre)}
+              ${highlightText(o.nombre, searchQuery)}
               ${o.delivered && o.paid ? '<span title="Completo">🌟</span>' : ''}
             </div>
             <div class="card-ts">${timeAgo(o.ts)}</div>
@@ -1304,6 +1626,7 @@ function renderOrders() {
         </div>
         <div class="card-footer">
           <span class="card-total"><strong>${o.total}</strong> ${o.total===1?'pay':'pays'}</span>
+          <span class="card-price-tag">${priceMXN} MXN</span>
           <button class="del-btn" onclick="deleteOrder(${i})" aria-label="Eliminar">✕</button>
         </div>
       </div>
@@ -1356,28 +1679,167 @@ document.getElementById('btnClear').addEventListener('click', async () => {
 });
 
 /* ══════════════════════
-   EXPORT CSV
+   EXPORT CSV — con columnas separadas por sabor
 ══════════════════════ */
 document.getElementById('btnExport').addEventListener('click', () => {
   if(!orders.length){ toast('¡No hay pedidos para exportar! 📋','warning'); return; }
   try {
-    const rows = [['Nombre','Departamento','Sabores','Total','Entregado','Pagado','Fecha']];
+    const rows = [
+      ['Nombre','Departamento','Queso (cant.)','Zarzamora (cant.)','Total Pays','Total $MXN','Entregado','Pagado','Fecha']
+    ];
     orders.forEach(o => {
-      const sab = o.flavors.map(f=>`${f.tipo==='queso'?'Queso':'Zarzamora'}:${f.cantidad}`).join(' | ');
+      const quesoQty = o.flavors.filter(f=>f.tipo==='queso').reduce((s,f)=>s+f.cantidad,0);
+      const zarzaQty = o.flavors.filter(f=>f.tipo==='zarzamora').reduce((s,f)=>s+f.cantidad,0);
+      const totalMXN = o.total * PRICE;
       const fecha = new Date(o.ts).toLocaleString('es-MX');
-      rows.push([o.nombre, o.depto, sab, o.total,
-        o.delivered?'Sí':'No', o.paid?'Sí':'No', fecha]);
+      rows.push([
+        o.nombre,
+        o.depto,
+        quesoQty,
+        zarzaQty,
+        o.total,
+        totalMXN,
+        o.delivered ? 'Sí' : 'No',
+        o.paid ? 'Sí' : 'No',
+        fecha
+      ]);
     });
-    const csv  = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+
+    // Fila de totales al final
+    const totalPays = orders.reduce((s,o)=>s+o.total,0);
+    const totalQueso = orders.reduce((s,o)=>s+o.flavors.filter(f=>f.tipo==='queso').reduce((a,f)=>a+f.cantidad,0),0);
+    const totalZarza = totalPays - totalQueso;
+    rows.push(['TOTALES','',totalQueso,totalZarza,totalPays,totalPays*PRICE,'','','']);
+
+    const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
     const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href=url; a.download=`pays_${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     setTimeout(()=>URL.revokeObjectURL(url),4000);
-    toast('📤 ¡CSV exportado con todo!','success');
+    toast('📤 ¡CSV exportado con sabores separados!','success');
   } catch(e) { toast('❌ Error al exportar, intenta de nuevo','error'); }
 });
+
+/* ══════════════════════
+   CHARTS
+══════════════════════ */
+let chartFlavors = null;
+let chartDept    = null;
+let chartStatus  = null;
+
+const chartDefaults = {
+  font: { family: "'Nunito', sans-serif", weight: '700' },
+  color: '#8A6880'
+};
+Chart.defaults.font.family = chartDefaults.font.family;
+Chart.defaults.font.weight = chartDefaults.font.weight;
+Chart.defaults.color = chartDefaults.color;
+
+function buildCharts(queso, zarza, deptData, deliv, notDeliv, paid, notPaid) {
+  // Dona sabores
+  const ctxF = document.getElementById('chartFlavors').getContext('2d');
+  if(chartFlavors) chartFlavors.destroy();
+  chartFlavors = new Chart(ctxF, {
+    type: 'doughnut',
+    data: {
+      labels: ['🧀 Queso', '🍇 Zarzamora'],
+      datasets: [{
+        data: [queso, zarza],
+        backgroundColor: ['#F2C57C','#C4B4E8'],
+        borderColor: ['#E8A84A','#A89BD4'],
+        borderWidth: 2,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 16, font: { size: 13, weight: '800' } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ${ctx.parsed} pays ($${ctx.parsed * PRICE} MXN)`
+          }
+        }
+      },
+      cutout: '60%',
+      animation: { animateRotate: true, duration: 700 }
+    }
+  });
+
+  // Barras departamentos
+  const ctxD = document.getElementById('chartDept').getContext('2d');
+  if(chartDept) chartDept.destroy();
+  const dLabels = deptData.map(d=>d[0]);
+  const dVals   = deptData.map(d=>d[1]);
+  chartDept = new Chart(ctxD, {
+    type: 'bar',
+    data: {
+      labels: dLabels.length ? dLabels : ['Sin datos'],
+      datasets: [{
+        label: 'Pays',
+        data: dVals.length ? dVals : [0],
+        backgroundColor: 'rgba(212,130,156,0.7)',
+        borderColor: '#D4829C',
+        borderWidth: 2,
+        borderRadius: 8,
+        hoverBackgroundColor: '#D4829C'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.y} pays — $${ctx.parsed.y * PRICE} MXN`
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1, font: { size: 11, weight: '700' } },
+          grid: { color: 'rgba(242,228,239,0.6)' }
+        },
+        x: { ticks: { font: { size: 11, weight: '800' } }, grid: { display: false } }
+      },
+      animation: { duration: 600 }
+    }
+  });
+
+  // Barras horizontales: estado pedidos
+  const ctxS = document.getElementById('chartStatus').getContext('2d');
+  if(chartStatus) chartStatus.destroy();
+  chartStatus = new Chart(ctxS, {
+    type: 'bar',
+    data: {
+      labels: ['Entregados','Sin entregar','Pagados','Sin pagar'],
+      datasets: [{
+        data: [deliv, notDeliv, paid, notPaid],
+        backgroundColor: ['#88C9A1','#FAE8F0','#E8A84A','#EDE9F8'],
+        borderColor:     ['#5BA878','#D4829C','#C8881A','#A89BD4'],
+        borderWidth: 2,
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: { stepSize: 1, font: { size: 11 } },
+          grid: { color: 'rgba(242,228,239,0.5)' }
+        },
+        y: { ticks: { font: { size: 12, weight: '800' } }, grid: { display: false } }
+      },
+      animation: { duration: 600 }
+    }
+  });
+}
 
 /* ══════════════════════
    RESUMEN
@@ -1391,11 +1853,25 @@ function renderResumen() {
   const pendDel = orders.filter(o=>!o.delivered).length;
   const pendPay = orders.filter(o=>!o.paid).length;
   const max     = Math.max(queso,zarza,1);
+  const avg     = orders.length ? (total/orders.length).toFixed(1) : 0;
+
+  // Recaudación
+  const totalMXN      = total * PRICE;
+  const paidOrders    = orders.filter(o=>o.paid);
+  const paidPays      = paidOrders.reduce((s,o)=>s+o.total,0);
+  const paidMXN       = paidPays * PRICE;
+  const pendMXN       = totalMXN - paidMXN;
+
+  document.getElementById('revTotal').textContent    = totalMXN.toLocaleString('es-MX');
+  document.getElementById('revSub').textContent      = `${total} pay${total!==1?'s':''} × $${PRICE} MXN`;
+  document.getElementById('revCobrado').textContent  = `$${paidMXN.toLocaleString('es-MX')}`;
+  document.getElementById('revPorCobrar').textContent = `$${pendMXN.toLocaleString('es-MX')}`;
 
   document.getElementById('statPays').textContent      = total;
   document.getElementById('statOrders').textContent    = orders.length;
   document.getElementById('statDelivered').textContent = deliv;
   document.getElementById('statPaid').textContent      = paid;
+  document.getElementById('statAvg').textContent       = avg;
   document.getElementById('pendDelivery').textContent  = pendDel;
   document.getElementById('pendPayment').textContent   = pendPay;
   document.getElementById('resQ').textContent          = queso;
@@ -1407,14 +1883,19 @@ function renderResumen() {
   const dmap = {};
   orders.forEach(o => { dmap[o.depto] = (dmap[o.depto]||0)+o.total; });
   const sorted = Object.entries(dmap).sort((a,b)=>b[1]-a[1]);
+
   const dc = document.getElementById('deptCard');
   dc.innerHTML = sorted.length === 0
     ? '<div class="dept-row"><span class="dept-name" style="color:var(--text-3)">Sin datos todavía 🌸</span></div>'
     : sorted.map(([n,c])=>`
         <div class="dept-row">
           <span class="dept-name">${esc(n)}</span>
+          <span class="dept-revenue">$${(c*PRICE).toLocaleString('es-MX')}</span>
           <span class="dept-count">${c} ${c===1?'pay':'pays'}</span>
         </div>`).join('');
+
+  // Charts
+  buildCharts(queso, zarza, sorted, deliv, pendDel, paid, pendPay);
 }
 
 /* ══════════════════════
