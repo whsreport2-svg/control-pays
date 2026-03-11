@@ -1062,6 +1062,43 @@
         </div>
       </div>
 
+      <!-- Data: Export / Import JSON -->
+      <div class="sec-head"><h2 style="font-size:16px">💾 Datos</h2></div>
+      <div class="config-section" style="margin-bottom:12px">
+        <div class="config-row" id="rowExportJSON" style="cursor:pointer">
+          <div class="config-row-left">
+            <span class="config-row-icon">📦</span>
+            <div class="config-row-info">
+              <div class="config-row-title">Exportar JSON</div>
+              <div class="config-row-sub">Guarda todos los pedidos como respaldo</div>
+            </div>
+          </div>
+          <span class="config-arrow">›</span>
+        </div>
+        <div class="config-row" id="rowImportJSON" style="cursor:pointer">
+          <div class="config-row-left">
+            <span class="config-row-icon">📂</span>
+            <div class="config-row-info">
+              <div class="config-row-title">Importar JSON</div>
+              <div class="config-row-sub">Restaura pedidos desde un respaldo</div>
+            </div>
+          </div>
+          <span class="config-arrow">›</span>
+        </div>
+        <div class="config-row" id="rowExportCSV" style="cursor:pointer">
+          <div class="config-row-left">
+            <span class="config-row-icon">📊</span>
+            <div class="config-row-info">
+              <div class="config-row-title">Exportar CSV</div>
+              <div class="config-row-sub">Abre en Excel o Google Sheets</div>
+            </div>
+          </div>
+          <span class="config-arrow">›</span>
+        </div>
+      </div>
+      <!-- Hidden file input for import -->
+      <input type="file" id="importFileInput" accept=".json" style="display:none">
+
       <!-- Install -->
       <div class="sec-head"><h2 style="font-size:16px">📲 Instalar app</h2></div>
       <div class="config-section" style="margin-bottom:12px">
@@ -1708,6 +1745,64 @@ function addDept() {
   inp.value = '';
   toast(`🏢 ¡"${val}" agregado!`, 'ok');
 }
+
+/* ══ JSON EXPORT / IMPORT ══ */
+function exportJSON() {
+  if(!orders.length){ toast('¡No hay pedidos para exportar! 📋','warn'); return; }
+  try {
+    const data = { version: 2, exportedAt: new Date().toISOString(), orders, departments };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `pays_respaldo_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    toast('📦 ¡JSON exportado como respaldo!','ok');
+  } catch(e) { toast('❌ Error al exportar JSON','err'); }
+}
+
+function importJSON() {
+  document.getElementById('importFileInput').click();
+}
+
+document.getElementById('importFileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+
+    // Validate
+    if(!data.orders || !Array.isArray(data.orders)) {
+      toast('❌ Archivo inválido — no tiene pedidos','err'); return;
+    }
+
+    const count = data.orders.length;
+    const ok = await confirmSheet('📂','¿Importar respaldo?',
+      `Se cargarán ${count} pedido${count>1?'s':''} del archivo. Los pedidos actuales se reemplazarán.`,
+      'Sí, importar');
+    if(!ok) { e.target.value=''; return; }
+
+    orders = data.orders;
+    if(data.departments && Array.isArray(data.departments)) {
+      departments = data.departments;
+      saveDepts(); refreshDeptSelects();
+    }
+    save(); renderOrders(); renderResumen(); renderDeptConfig();
+    toast(`✅ ¡${count} pedido${count>1?'s':''} importado${count>1?'s':''}!`,'ok');
+  } catch(err) {
+    toast('❌ El archivo no es un JSON válido','err');
+  }
+  e.target.value = '';
+});
+
+// Wire up config rows
+document.getElementById('rowExportJSON').addEventListener('click', exportJSON);
+document.getElementById('rowImportJSON').addEventListener('click', importJSON);
+document.getElementById('rowExportCSV').addEventListener('click', () => {
+  document.getElementById('btnExport').click();
+});
 
 /* ══ INIT ══ */
 refreshDeptSelects();
