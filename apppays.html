@@ -422,7 +422,12 @@
     .card-totals { display: flex; flex-direction: column; gap: 1px; }
     .card-qty  { font-size: 13px; font-weight: 700; color: var(--text-2); }
     .card-qty strong { font-family: 'Pacifico', cursive; font-size: 17px; color: var(--accent); }
-    .card-price-total { font-size: 13px; font-weight: 800; color: var(--mint); }
+    .card-price-total {
+      font-size: 13px; font-weight: 700; color: var(--text-2); margin-top: 2px;
+    }
+    .card-price-total strong { font-weight: 900; color: var(--gold); }
+    .order-card.paid .card-price-total { color: #4A9A6A; }
+    .order-card.paid .card-price-total strong { color: #4A9A6A; }
 
     .card-actions { display: flex; gap: 4px; }
     .icon-btn {
@@ -897,6 +902,15 @@
         ⚠️ Modo privado detectado — los pedidos no se guardarán al cerrar Safari.
       </div>
 
+      <!-- Precio por pay (visible en Nuevo para referencia rápida) -->
+      <div class="price-bar" id="priceBarNuevo">
+        <div class="price-bar-lbl">💲 Precio / pay</div>
+        <div class="price-input-wrap">
+          <span class="price-currency">$</span>
+          <input type="number" id="pricePerPayNuevo" min="0" step="0.50" inputmode="decimal" placeholder="0.00">
+        </div>
+      </div>
+
       <div class="form-card">
         <div class="field-row" id="rowNombre">
           <span class="fi">👤</span>
@@ -1210,15 +1224,26 @@ let currentFilter = 'all';
 let searchQuery   = '';
 let editingIndex  = -1;
 
-// Price now lives in Config tab
+// Price inputs — synced between Nuevo and Config tabs
 const priceConfigInput = document.getElementById('pricePerPayConfig');
-if(pricePerPay > 0) priceConfigInput.value = pricePerPay;
-priceConfigInput.addEventListener('input', () => {
-  pricePerPay = parseFloat(priceConfigInput.value) || 0;
+const priceNuevoInput  = document.getElementById('pricePerPayNuevo');
+
+function syncPriceInputs(val) {
+  pricePerPay = parseFloat(val) || 0;
   lsSet('pays_price', pricePerPay);
+  if(priceConfigInput) priceConfigInput.value = pricePerPay > 0 ? pricePerPay : '';
+  if(priceNuevoInput)  priceNuevoInput.value  = pricePerPay > 0 ? pricePerPay : '';
   updateStrip();
   renderOrders();
-});
+}
+
+if(pricePerPay > 0) {
+  if(priceConfigInput) priceConfigInput.value = pricePerPay;
+  if(priceNuevoInput)  priceNuevoInput.value  = pricePerPay;
+}
+
+priceConfigInput.addEventListener('input', e => syncPriceInputs(e.target.value));
+priceNuevoInput.addEventListener('input',  e => syncPriceInputs(e.target.value));
 
 function save() { lsSet('pays_v4', JSON.stringify(orders)); updateBadge(); }
 function updateBadge() {
@@ -1435,7 +1460,9 @@ function renderOrders() {
   list.innerHTML = subset.map(o => {
     const i = orders.indexOf(o);
     const pp = (o.pricePerPay||0) > 0 ? o.pricePerPay : pricePerPay;
-    const moneyLine = pp > 0 ? `<div class="card-price-total">${formatMXN(o.total * pp)}</div>` : '';
+    const moneyLine = pp > 0
+      ? `<div class="card-price-total">${o.paid ? '✅ Cobrado' : '💲 A cobrar'}: <strong>${formatMXN(o.total * pp)}</strong></div>`
+      : '';
     const cardCls = ['order-card', o.delivered?'delivered':'', o.paid?'paid':''].join(' ').trim();
     return `
     <li><div class="${cardCls}">
