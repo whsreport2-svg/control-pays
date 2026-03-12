@@ -949,6 +949,8 @@
       font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 30px;
     }
     .dpill.pays   { background: var(--accent-lt); color: var(--accent); }
+    .dpill.queso-pill { background: #FDF0CC; color: #9A7020; }
+    .dpill.zarza-pill { background: #EDE8FA; color: #6B55A0; }
     .dpill.money  { background: var(--mint-lt);   color: #3A8A5A; }
     .dpill.pend   { background: var(--gold-lt);   color: #8A5A10; }
 
@@ -997,6 +999,19 @@
       font-size: 13px; font-weight: 900; color: var(--accent);
       flex-shrink: 0; min-width: 36px; text-align: right;
     }
+
+    /* ════════════ BANK SHARE ════════════ */
+    .icon-btn.wa { color: #25D366; }
+    .icon-btn.wa:active { background: #E6FAF0; }
+
+    /* bank config in settings */
+    .bank-field {
+      border: none; background: transparent; outline: none;
+      font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700;
+      color: var(--text-1); flex: 1; padding: 0;
+      -webkit-appearance: none;
+    }
+    .bank-field::placeholder { color: var(--text-3); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -1366,6 +1381,44 @@
         </div>
       </div>
 
+      <!-- Bank info -->
+      <div class="sec-head"><h2 style="font-size:16px">🏦 Datos bancarios</h2></div>
+      <div class="config-section" style="margin-bottom:12px">
+        <div class="config-row">
+          <div class="config-row-left">
+            <span class="config-row-icon">🔢</span>
+            <div class="config-row-info">
+              <div class="config-row-title">CLABE / Número de cuenta</div>
+            </div>
+          </div>
+          <input class="bank-field" id="bankClabe" type="text" inputmode="numeric"
+                 placeholder="18 dígitos" maxlength="30"
+                 style="max-width:160px;text-align:right;font-size:13px">
+        </div>
+        <div class="config-row">
+          <div class="config-row-left">
+            <span class="config-row-icon">👤</span>
+            <div class="config-row-info">
+              <div class="config-row-title">Beneficiario</div>
+            </div>
+          </div>
+          <input class="bank-field" id="bankNombre" type="text" autocapitalize="words"
+                 placeholder="Nombre completo" maxlength="50"
+                 style="max-width:180px;text-align:right;font-size:13px">
+        </div>
+        <div class="config-row">
+          <div class="config-row-left">
+            <span class="config-row-icon">🏛️</span>
+            <div class="config-row-info">
+              <div class="config-row-title">Institución / Banco</div>
+            </div>
+          </div>
+          <input class="bank-field" id="bankInst" type="text"
+                 placeholder="Ej. Mercado Pago" maxlength="30"
+                 style="max-width:150px;text-align:right;font-size:13px">
+        </div>
+      </div>
+
       <!-- About -->
       <div class="about-card">
         <div class="ac-emoji">🥧</div>
@@ -1520,7 +1573,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.getElementById(`page-${tab.dataset.page}`).classList.add('active');
     document.querySelector('.scroll-area').scrollTop = 0;
     if(tab.dataset.page==='resumen') renderResumen();
-    if(tab.dataset.page==='config')  renderDeptConfig();
+    if(tab.dataset.page==='config')  { renderDeptConfig(); initBankFields(); }
   });
 });
 
@@ -1852,6 +1905,7 @@ function renderOrders() {
           ${moneyLine}
         </div>
         <div class="card-actions">
+          <button class="icon-btn wa" onclick="shareOrderWA(${i})" title="Compartir por WhatsApp">💬</button>
           <button class="icon-btn" onclick="openEdit(${i})" title="Editar">✏️</button>
           <button class="icon-btn" onclick="deleteOrder(${i})" title="Eliminar">🗑️</button>
         </div>
@@ -2043,6 +2097,8 @@ function renderResumen() {
 
   container.innerHTML = sortedDepts.map(([dept, dOrders]) => {
     const dTotal   = dOrders.reduce((s,o)=>s+o.total, 0);
+    const dQueso   = dOrders.reduce((s,o)=>s+o.flavors.filter(f=>f.tipo==='queso').reduce((a,f)=>a+f.cantidad,0), 0);
+    const dZarza   = dTotal - dQueso;
     const dPend    = dOrders.filter(o=>!o.delivered||!o.paid).length;
     const pp       = pricePerPay;
     const dRevenue = pp > 0
@@ -2087,7 +2143,8 @@ function renderResumen() {
         </div>
         <div class="dept-group-right">
           <div class="dept-group-pills">
-            <span class="dpill pays">${dTotal} 🥧</span>
+            ${dQueso > 0 ? `<span class="dpill queso-pill">🧀 ${dQueso}</span>` : ''}
+            ${dZarza > 0 ? `<span class="dpill zarza-pill">🍇 ${dZarza}</span>` : ''}
             ${moneyPill}
             ${pendPill}
           </div>
@@ -2421,8 +2478,73 @@ _Enviado desde Pays Control 🥧_`;
   toast('💬 Abriendo WhatsApp…','ok');
 });
 
+
+/* ══ BANK INFO ══ */
+let bankInfo = { clabe: '', nombre: '', inst: '' };
+try {
+  const saved = lsGet('pays_bank');
+  if(saved) bankInfo = JSON.parse(saved);
+} catch(e) {}
+
+// Default values if empty
+if(!bankInfo.clabe)  bankInfo.clabe  = '722969010119261796';
+if(!bankInfo.nombre) bankInfo.nombre = 'Miguel Rafael Barajas Perez';
+if(!bankInfo.inst)   bankInfo.inst   = 'Mercado Pago W';
+
+function saveBankInfo() { lsSet('pays_bank', JSON.stringify(bankInfo)); }
+
+function initBankFields() {
+  const clabe  = document.getElementById('bankClabe');
+  const nombre = document.getElementById('bankNombre');
+  const inst   = document.getElementById('bankInst');
+  if(!clabe) return;
+
+  clabe.value  = bankInfo.clabe;
+  nombre.value = bankInfo.nombre;
+  inst.value   = bankInfo.inst;
+
+  clabe.addEventListener('input',  () => { bankInfo.clabe  = clabe.value.trim();  saveBankInfo(); });
+  nombre.addEventListener('input', () => { bankInfo.nombre = nombre.value.trim(); saveBankInfo(); });
+  inst.addEventListener('input',   () => { bankInfo.inst   = inst.value.trim();   saveBankInfo(); });
+}
+
+/* ══ SHARE INDIVIDUAL ORDER ══ */
+function shareOrderWA(i) {
+  const o  = orders[i];
+  const pp = (o.pricePerPay||0) > 0 ? o.pricePerPay : pricePerPay;
+  const totalMXN = pp > 0 ? pp * o.total : 0;
+
+  const flavLines = o.flavors
+    .map(f => `  ${f.tipo === 'queso' ? '🧀 Queso' : '🍇 Zarzamora'}: ${f.cantidad} pay${f.cantidad>1?'s':''}`)
+    .join('\n');
+
+  let msg = `🥧 *Tu pedido de pays*\n\n`;
+  msg += `👤 *${o.nombre}* — ${o.depto}\n`;
+  msg += `\n📦 *Pedido:*\n${flavLines}\n`;
+  msg += `\n🥧 Total: *${o.total} ${o.total===1?'pay':'pays'}*\n`;
+
+  if(totalMXN > 0) {
+    msg += `💵 A pagar: *${formatMXN(totalMXN)}*\n`;
+  }
+
+  // Bank info
+  if(bankInfo.clabe || bankInfo.nombre) {
+    msg += `\n💳 *Datos para pago:*\n`;
+    if(bankInfo.inst)   msg += `🏛️ ${bankInfo.inst}\n`;
+    if(bankInfo.nombre) msg += `👤 ${bankInfo.nombre}\n`;
+    if(bankInfo.clabe)  msg += `🔢 CLABE: \`${bankInfo.clabe}\`\n`;
+  }
+
+  msg += `\n_Pays Control 🥧 · Gracias por tu pedido 💕_`;
+
+  const encoded = encodeURIComponent(msg);
+  window.open(`https://wa.me/?text=${encoded}`, '_blank');
+  toast(`💬 Compartiendo pedido de ${o.nombre}…`, 'ok');
+}
+
 /* ══ INIT ══ */
 refreshDeptSelects();
+initBankFields();
 renderOrders();
 renderResumen();
 updateBadge();
