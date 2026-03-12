@@ -862,6 +862,141 @@
     }
     .wa-btn:active { transform: scale(.97); }
     .wa-btn-icon { font-size: 20px; }
+
+    /* ════════════ DUPLICATE SHEET ════════════ */
+    .dup-sheet { padding: 24px 20px 20px; }
+    .dup-header { text-align: center; margin-bottom: 18px; }
+    .dup-header .dup-emoji { font-size: 38px; margin-bottom: 8px; }
+    .dup-header h3 { font-size: 19px; font-weight: 900; color: var(--text-1); margin-bottom: 4px; }
+    .dup-header p  { font-size: 13px; font-weight: 600; color: var(--text-2); line-height: 1.5; }
+
+    .dup-compare {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 18px;
+    }
+    .dup-card {
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: var(--r-sm); padding: 12px;
+    }
+    .dup-card.existing { border-color: #C4B4E8; background: var(--lav-lt); }
+    .dup-card.nuevo-c  { border-color: #C2E8D0; background: var(--mint-lt); }
+    .dup-card-tag {
+      font-size: 10px; font-weight: 900; text-transform: uppercase;
+      letter-spacing: .8px; margin-bottom: 6px;
+    }
+    .dup-card.existing .dup-card-tag { color: var(--zarza-c); }
+    .dup-card.nuevo-c  .dup-card-tag { color: var(--mint); }
+    .dup-card-name  { font-size: 14px; font-weight: 900; color: var(--text-1); margin-bottom: 4px; }
+    .dup-card-flavs { font-size: 12px; font-weight: 700; color: var(--text-2); line-height: 1.6; }
+    .dup-card-total {
+      font-size: 12px; font-weight: 800; margin-top: 6px;
+      padding-top: 6px; border-top: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    .dup-card-total strong { color: var(--accent); font-family: 'Pacifico', cursive; font-size: 16px; }
+
+    /* merged preview */
+    .dup-merge-preview {
+      background: linear-gradient(135deg, #F2C4D8, #D4C0EE 55%, #B8D8EE);
+      border-radius: var(--r-sm); padding: 12px 14px;
+      margin-bottom: 18px; display: none;
+    }
+    .dup-merge-preview.show { display: block; }
+    .dup-merge-lbl {
+      font-size: 11px; font-weight: 900; text-transform: uppercase;
+      letter-spacing: .8px; color: rgba(255,255,255,.8); margin-bottom: 6px;
+    }
+    .dup-merge-flavs { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.7; }
+    .dup-merge-total {
+      font-size: 13px; font-weight: 800; color: rgba(255,255,255,.85);
+      margin-top: 6px; padding-top: 6px;
+      border-top: 1px solid rgba(255,255,255,.3);
+    }
+    .dup-merge-total strong { font-family: 'Pacifico', cursive; font-size: 18px; color: #fff; }
+
+    .dup-actions { display: flex; flex-direction: column; gap: 8px; }
+    .dup-btn {
+      width: 100%; padding: 15px; border-radius: var(--r-sm); border: none;
+      font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 900;
+      cursor: pointer; transition: all .15s; text-align: center;
+    }
+    .dup-btn:active { transform: scale(.97); }
+    .dup-btn.merge  { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(212,130,156,.35); }
+    .dup-btn.keep   { background: var(--bg); color: var(--text-1); border: 1.5px solid var(--border); }
+    .dup-btn.cancel { background: transparent; color: var(--text-3); font-size: 14px; padding: 10px; }
+
+    /* ════════════ DEPT EXPAND IN RESUMEN ════════════ */
+    .dept-group {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--r); margin: 0 16px 10px; overflow: hidden;
+    }
+    .dept-group-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; cursor: pointer;
+      user-select: none; -webkit-user-select: none;
+      transition: background .15s;
+    }
+    .dept-group-header:active { background: var(--bg); }
+
+    .dept-group-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .dept-group-icon { font-size: 20px; flex-shrink: 0; }
+    .dept-group-name { font-size: 16px; font-weight: 900; color: var(--text-1); }
+
+    .dept-group-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .dept-group-pills { display: flex; gap: 5px; align-items: center; }
+
+    .dpill {
+      font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 30px;
+    }
+    .dpill.pays   { background: var(--accent-lt); color: var(--accent); }
+    .dpill.money  { background: var(--mint-lt);   color: #3A8A5A; }
+    .dpill.pend   { background: var(--gold-lt);   color: #8A5A10; }
+
+    .dept-chevron {
+      font-size: 14px; color: var(--text-3);
+      transition: transform .25s cubic-bezier(.22,1,.36,1);
+      flex-shrink: 0;
+    }
+    .dept-group.open .dept-chevron { transform: rotate(90deg); }
+
+    .dept-group-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s cubic-bezier(.22,1,.36,1);
+      border-top: 0px solid var(--border);
+    }
+    .dept-group.open .dept-group-body {
+      max-height: 2000px;
+      border-top: 1.5px solid var(--border);
+    }
+
+    /* mini order row inside dept */
+    .dept-order-row {
+      display: flex; align-items: center;
+      padding: 11px 16px; gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dept-order-row:last-child { border-bottom: none; }
+
+    .dor-name { font-size: 14px; font-weight: 800; color: var(--text-1); flex: 1; min-width: 0; }
+    .dor-flavs {
+      font-size: 12px; font-weight: 600; color: var(--text-2);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 120px;
+    }
+    .dor-status { display: flex; gap: 4px; flex-shrink: 0; }
+    .dor-dot {
+      width: 22px; height: 22px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+    .dor-dot.d-on  { background: var(--mint-lt); }
+    .dor-dot.d-off { background: var(--bg); border: 1.5px solid var(--border); }
+    .dor-dot.p-on  { background: var(--gold-lt); }
+    .dor-dot.p-off { background: var(--bg); border: 1.5px solid var(--border); }
+    .dor-total {
+      font-size: 13px; font-weight: 900; color: var(--accent);
+      flex-shrink: 0; min-width: 36px; text-align: right;
+    }
   </style>
 </head>
 <body>
@@ -921,6 +1056,47 @@
       </div>
       <div class="edit-footer">
         <button class="edit-save" id="editSave">Guardar cambios 💾</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Duplicate overlay -->
+<div class="overlay" id="overlayDup">
+  <div class="sheet">
+    <div class="dup-sheet">
+      <div class="dup-header">
+        <div class="dup-emoji">🔍</div>
+        <h3>¡Pedido duplicado!</h3>
+        <p id="dupMsg">Ya existe un pedido de esta persona.<br>¿Qué quieres hacer?</p>
+      </div>
+
+      <div class="dup-compare">
+        <div class="dup-card existing">
+          <div class="dup-card-tag">Existente</div>
+          <div class="dup-card-name" id="dupExistName"></div>
+          <div class="dup-card-flavs" id="dupExistFlavs"></div>
+          <div class="dup-card-total" id="dupExistTotal"></div>
+        </div>
+        <div class="dup-card nuevo-c">
+          <div class="dup-card-tag">Nuevo</div>
+          <div class="dup-card-name" id="dupNewName"></div>
+          <div class="dup-card-flavs" id="dupNewFlavs"></div>
+          <div class="dup-card-total" id="dupNewTotal"></div>
+        </div>
+      </div>
+
+      <div class="dup-merge-preview" id="dupMergePreview">
+        <div class="dup-merge-lbl">🔀 Si unificas quedaría así</div>
+        <div class="dup-merge-flavs" id="dupMergeFlavs"></div>
+        <div class="dup-merge-total" id="dupMergeTotal"></div>
+      </div>
+
+      <div class="dup-actions">
+        <button class="dup-btn merge"  id="dupBtnMerge">🔀 Unificar pedidos</button>
+        <button class="dup-btn keep"   id="dupBtnKeep">➕ Guardar como pedido nuevo</button>
+        <button class="dup-btn cancel" id="dupBtnCancel">Cancelar</button>
       </div>
     </div>
   </div>
@@ -1096,8 +1272,8 @@
         </div>
       </div>
 
-      <div class="sec-head"><h2>Por departamento</h2></div>
-      <div class="dept-card" id="deptCard"></div>
+      <div class="sec-head"><h2>Por departamento</h2><span id="deptGroupCount"></span></div>
+      <div id="deptGroups"></div>
     </div>
 
 
@@ -1470,25 +1646,129 @@ function validate() {
 }
 
 /* ══ SUBMIT ══ */
-document.getElementById('btnSubmit').addEventListener('click', () => {
-  if(!validate()) return;
-  const nombre  = document.getElementById('inputNombre').value.trim();
-  const depto   = document.getElementById('inputDepto').value;
-  const flavors = getFlavorData();
-  const total   = flavors.reduce((s,f)=>s+f.cantidad, 0);
+// Pending new order data (used by dup sheet)
+let pendingOrder = null;
 
-  orders.push({ nombre, depto, flavors, total, ts: Date.now(),
-    delivered: false, paid: false, pricePerPay });
-  save(); renderOrders();
-
+function resetForm() {
   document.getElementById('inputNombre').value='';
   document.getElementById('inputDepto').value='';
   document.getElementById('flavorRows').innerHTML='';
   fid=0; fieldOk('rowNombre','errNombre'); fieldOk('rowDepto','errDepto');
   addFlavorRow(); updateStrip();
+}
 
-  toast(`🎉 ¡Pedido de ${nombre} guardado!`, 'ok');
+function commitOrder(order) {
+  orders.push(order);
+  save(); renderOrders();
+  resetForm();
+  toast(`🎉 ¡Pedido de ${order.nombre} guardado!`, 'ok');
   setTimeout(()=>document.querySelector('[data-page="pedidos"]').click(), 700);
+}
+
+function mergeFlavorLists(existingFlavors, newFlavors) {
+  // Combine same tipos, sum quantities
+  const map = {};
+  [...existingFlavors, ...newFlavors].forEach(f => {
+    map[f.tipo] = (map[f.tipo] || 0) + f.cantidad;
+  });
+  return Object.entries(map).map(([tipo, cantidad]) => ({ tipo, cantidad }));
+}
+
+function flavorText(flavors) {
+  return flavors.map(f =>
+    `${f.tipo === 'queso' ? '🧀 Queso' : '🍇 Zarzamora'}: ${f.cantidad}`
+  ).join('\n');
+}
+
+document.getElementById('btnSubmit').addEventListener('click', () => {
+  if(!validate()) return;
+
+  const nombre  = document.getElementById('inputNombre').value.trim();
+  const depto   = document.getElementById('inputDepto').value;
+  const flavors = getFlavorData();
+  const total   = flavors.reduce((s,f)=>s+f.cantidad, 0);
+
+  const newOrder = { nombre, depto, flavors, total, ts: Date.now(),
+    delivered: false, paid: false, pricePerPay };
+
+  // Check for duplicate: same nombre (case-insensitive) + same depto
+  const dupIndex = orders.findIndex(o =>
+    o.nombre.toLowerCase().trim() === nombre.toLowerCase().trim() &&
+    o.depto === depto
+  );
+
+  if(dupIndex === -1) {
+    // No duplicate — save directly
+    commitOrder(newOrder);
+    return;
+  }
+
+  // Duplicate found — show comparison sheet
+  const existing = orders[dupIndex];
+  pendingOrder = { newOrder, dupIndex };
+
+  // Fill existing card
+  document.getElementById('dupExistName').textContent  = existing.nombre + ' · ' + existing.depto;
+  document.getElementById('dupExistFlavs').textContent = flavorText(existing.flavors);
+  document.getElementById('dupExistTotal').innerHTML   = `Total: <strong>${existing.total}</strong> ${existing.total===1?'pay':'pays'}`;
+
+  // Fill new card
+  document.getElementById('dupNewName').textContent  = newOrder.nombre + ' · ' + newOrder.depto;
+  document.getElementById('dupNewFlavs').textContent = flavorText(newOrder.flavors);
+  document.getElementById('dupNewTotal').innerHTML   = `Total: <strong>${newOrder.total}</strong> ${newOrder.total===1?'pay':'pays'}`;
+
+  // Fill merged preview
+  const merged = mergeFlavorLists(existing.flavors, newOrder.flavors);
+  const mergedTotal = merged.reduce((s,f)=>s+f.cantidad, 0);
+  document.getElementById('dupMergeFlavs').textContent = flavorText(merged);
+  document.getElementById('dupMergeTotal').innerHTML   = `Total unificado: <strong>${mergedTotal}</strong> ${mergedTotal===1?'pay':'pays'}`;
+  document.getElementById('dupMergePreview').classList.add('show');
+
+  document.getElementById('overlayDup').classList.add('show');
+});
+
+/* ── Duplicate sheet actions ── */
+document.getElementById('dupBtnMerge').addEventListener('click', () => {
+  if(!pendingOrder) return;
+  const { newOrder, dupIndex } = pendingOrder;
+  const existing = orders[dupIndex];
+
+  const merged = mergeFlavorLists(existing.flavors, newOrder.flavors);
+  const mergedTotal = merged.reduce((s,f)=>s+f.cantidad, 0);
+
+  // Update existing order, keep its status and timestamp
+  orders[dupIndex] = { ...existing, flavors: merged, total: mergedTotal };
+  save(); renderOrders(); resetForm();
+
+  document.getElementById('overlayDup').classList.remove('show');
+  document.getElementById('dupMergePreview').classList.remove('show');
+  pendingOrder = null;
+  toast(`🔀 ¡Pedidos de ${existing.nombre} unificados!`, 'ok');
+  setTimeout(()=>document.querySelector('[data-page="pedidos"]').click(), 700);
+});
+
+document.getElementById('dupBtnKeep').addEventListener('click', () => {
+  if(!pendingOrder) return;
+  const { newOrder } = pendingOrder;
+  document.getElementById('overlayDup').classList.remove('show');
+  document.getElementById('dupMergePreview').classList.remove('show');
+  pendingOrder = null;
+  commitOrder(newOrder);
+});
+
+document.getElementById('dupBtnCancel').addEventListener('click', () => {
+  document.getElementById('overlayDup').classList.remove('show');
+  document.getElementById('dupMergePreview').classList.remove('show');
+  pendingOrder = null;
+  toast('Pedido no guardado — puedes editarlo 😊', 'info');
+});
+
+document.getElementById('overlayDup').addEventListener('click', e => {
+  if(e.target === document.getElementById('overlayDup')) {
+    document.getElementById('overlayDup').classList.remove('show');
+    document.getElementById('dupMergePreview').classList.remove('show');
+    pendingOrder = null;
+  }
 });
 
 /* ══ FILTER ORDERS ══ */
@@ -1740,12 +2020,94 @@ function renderResumen() {
     revCard.style.display = 'none';
   }
 
+  // ── Dept groups with expandable order list ──
   const dmap = {};
-  orders.forEach(o=>{ dmap[o.depto]=(dmap[o.depto]||0)+o.total; });
-  const sorted = Object.entries(dmap).sort((a,b)=>b[1]-a[1]);
-  document.getElementById('deptCard').innerHTML = sorted.length===0
-    ? '<div class="dept-row"><span class="dept-name" style="color:var(--text-3)">Sin datos todavía 🌸</span></div>'
-    : sorted.map(([n,c])=>`<div class="dept-row"><span class="dept-name">${esc(n)}</span><span class="dept-count">${c} ${c===1?'pay':'pays'}</span></div>`).join('');
+  orders.forEach(o => {
+    if(!dmap[o.depto]) dmap[o.depto] = [];
+    dmap[o.depto].push(o);
+  });
+  const sortedDepts = Object.entries(dmap).sort((a,b) => {
+    const ta = b[1].reduce((s,o)=>s+o.total,0);
+    const tb = a[1].reduce((s,o)=>s+o.total,0);
+    return ta - tb;
+  });
+
+  const container = document.getElementById('deptGroups');
+  const groupCount = document.getElementById('deptGroupCount');
+  if(groupCount) groupCount.textContent = sortedDepts.length + ' dept.';
+
+  if(sortedDepts.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-3);font-size:14px;font-weight:700">Sin datos todavía 🌸</div>';
+    return;
+  }
+
+  container.innerHTML = sortedDepts.map(([dept, dOrders]) => {
+    const dTotal   = dOrders.reduce((s,o)=>s+o.total, 0);
+    const dPend    = dOrders.filter(o=>!o.delivered||!o.paid).length;
+    const pp       = pricePerPay;
+    const dRevenue = pp > 0
+      ? dOrders.filter(o=>o.paid).reduce((s,o)=>{
+          const p=(o.pricePerPay||0)>0?o.pricePerPay:pp;
+          return s+p*o.total;
+        },0)
+      : 0;
+
+    const moneyPill = pp > 0
+      ? `<span class="dpill money">${formatMXN(dRevenue)}</span>`
+      : '';
+    const pendPill = dPend > 0
+      ? `<span class="dpill pend">⏳ ${dPend}</span>`
+      : '';
+
+    const orderRows = dOrders.map(o => {
+      const flavShort = o.flavors.map(f =>
+        `${f.tipo==='queso'?'🧀':'🍇'}${f.cantidad}`
+      ).join(' ');
+      const dDot = o.delivered
+        ? '<div class="dor-dot d-on" title="Entregado">✅</div>'
+        : '<div class="dor-dot d-off" title="Sin entregar">📦</div>';
+      const pDot = o.paid
+        ? '<div class="dor-dot p-on" title="Pagado">💰</div>'
+        : '<div class="dor-dot p-off" title="Sin cobrar">💳</div>';
+      return `
+        <div class="dept-order-row">
+          <div class="dor-name">${esc(o.nombre)}</div>
+          <div class="dor-flavs">${flavShort}</div>
+          <div class="dor-status">${dDot}${pDot}</div>
+          <div class="dor-total">${o.total} 🥧</div>
+        </div>`;
+    }).join('');
+
+    return `
+    <div class="dept-group" id="dg-${esc(dept)}">
+      <div class="dept-group-header" onclick="toggleDeptGroup('${esc(dept)}')">
+        <div class="dept-group-left">
+          <span class="dept-group-icon">🏢</span>
+          <span class="dept-group-name">${esc(dept.charAt(0)+dept.slice(1).toLowerCase())}</span>
+        </div>
+        <div class="dept-group-right">
+          <div class="dept-group-pills">
+            <span class="dpill pays">${dTotal} 🥧</span>
+            ${moneyPill}
+            ${pendPill}
+          </div>
+          <span class="dept-chevron">›</span>
+        </div>
+      </div>
+      <div class="dept-group-body">
+        ${orderRows}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDeptGroup(dept) {
+  const el = document.getElementById(`dg-${dept}`);
+  if(!el) return;
+  const isOpen = el.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.dept-group.open').forEach(g => g.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
 }
 
 
